@@ -32,7 +32,7 @@ def export_run(out_dir="data/processed", run_id="", seed=0, model_type="dlvo",
 
     frames: Iterable von (t in Sekunden, Positionsarray (n,2) in Metern,
     pair_rows aus pair_distance_table()). pairs.csv erhält nur Paare mit
-    zone != "separated" (L < 100 nm) — entfernte Paare kann Team 2 aus x, y
+    zone != "separated" (L < 100 nm) - entfernte Paare kann Team 2 aus x, y
     selbst rekonstruieren.
     """
     out_dir = Path(out_dir)

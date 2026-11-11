@@ -32,7 +32,7 @@ Three things compete:
 2. **Repulsion can keep them apart.** Charged surfaces in salty water produce an electrostatic repulsion in the classical DLVO model. A very short-range “core” term also prevents the balls from passing through one another in that model.
 3. **Thermal motion shakes them.** Water molecules continually jostle the protocells. This is Brownian motion: even when an interaction pulls or pushes, random kicks prevent a perfectly smooth trajectory.
 
-A useful analogy is a pair of magnets on a shaking table. Attraction is the magnet, repulsion is a bumper, and thermal motion is the shaking. Whether the pair stays together depends on all three—not on attraction alone.
+A useful analogy is a pair of magnets on a shaking table. Attraction is the magnet, repulsion is a bumper, and thermal motion is the shaking. Whether the pair stays together depends on all three-not on attraction alone.
 
 ### Salt changes the electrostatic part
 
@@ -44,7 +44,7 @@ The simplest van der Waals formula is a near-field approximation. At larger sepa
 
 ### From pairs to clusters
 
-When many protocells move in the same periodic box, we draw an imaginary line—a graph **edge**—between two protocells if their surface gap is below a chosen threshold. Each protocell is a graph **node**, including isolated ones.
+When many protocells move in the same periodic box, we draw an imaginary line-a graph **edge**-between two protocells if their surface gap is below a chosen threshold. Each protocell is a graph **node**, including isolated ones.
 
 Different thresholds answer different questions:
 
@@ -77,7 +77,7 @@ Each subsection opens with an **ELI5** one-liner: the intuition first, then the 
 
 ### 1. Geometry: surface gap, not center distance
 
-> **ELI5:** We measure the water left *between the balls' skins*, not the distance between their centers. The box is a Pac-Man screen — leave the right edge and you reappear on the left — so two balls on opposite edges can still be neighbors.
+> **ELI5:** We measure the water left *between the balls' skins*, not the distance between their centers. The box is a Pac-Man screen - leave the right edge and you reappear on the left - so two balls on opposite edges can still be neighbors.
 
 For equal spherical protocells of radius $R$, with positions $\mathbf{x}_i$ and $\mathbf{x}_j$,
 
@@ -128,7 +128,7 @@ Outputs report force in pN and energy in $k_BT$; internal geometry and dynamics 
 
 ### 3. Non-retarded van der Waals attraction: `vdw`
 
-> **ELI5:** Everything is slightly sticky. Two balls attract like very weak magnets, and like magnets the pull grows much stronger as they get closer. The Hamaker constant is the material's "stickiness score" — PMBC is ten times stickier than fatty acid.
+> **ELI5:** Everything is slightly sticky. Two balls attract like very weak magnets, and like magnets the pull grows much stronger as they get closer. The Hamaker constant is the material's "stickiness score" - PMBC is ten times stickier than fatty acid.
 
 For two equal spheres in the Derjaguin/Proximity-Force Approximation, $R_\mathrm{eff}=R/2$, and
 
@@ -144,7 +144,7 @@ This is the non-retarded near-field limit of the broader Lifshitz description, n
 
 ### 4. Classical DLVO: `dlvo` / `dlvo_classic`
 
-> **ELI5:** The classic model stacks three forces: the sticky magnet (vdW), a fuzzy charged coat that pushes other balls away (electrostatics — salt shrinks the fuzz so the push only works at very short range), and a super-short-range bumper that stops the balls from passing through one another.
+> **ELI5:** The classic model stacks three forces: the sticky magnet (vdW), a fuzzy charged coat that pushes other balls away (electrostatics - salt shrinks the fuzz so the push only works at very short range), and a super-short-range bumper that stops the balls from passing through one another.
 
 The classical DLVO variant contains electrostatic repulsion, non-retarded vdW attraction, and a steep core-repulsion term:
 
@@ -167,10 +167,10 @@ $$
 with default $B=20k_BT$. The Debye lengths used are:
 
 | Salt concentration | Debye length $\lambda_D$ |
-|---:|---:|
-| 50 mM | 1.36 nm |
-| 100 mM | 0.96 nm |
-| 200 mM | 0.68 nm |
+| -----------------: | -------------------------: |
+|              50 mM |                    1.36 nm |
+|             100 mM |                    0.96 nm |
+|             200 mM |                    0.68 nm |
 
 The exponential factor makes electrostatics important mainly near contact. At several Debye lengths, this contribution is strongly reduced.
 
@@ -206,28 +206,30 @@ The optional name `cl_meso_hypothesis` is intentionally absent: the assignment p
 
 ### 6. The three simulated model variants
 
-> **ELI5:** Three recipe cards: (1) sticky magnet only, (2) sticky magnet + charged coat + hard bumper (the classic model), (3) sticky magnet with the fading factor. Recipes are compared, never mixed — and because recipes 1 and 3 have no bumper, their balls can sink into one another.
+> **ELI5:** Three recipe cards: (1) sticky magnet only, (2) sticky magnet + charged coat + hard bumper (the classic model), (3) sticky magnet with the fading factor. Recipes are compared, never mixed - and because recipes 1 and 3 have no bumper, their balls can sink into one another.
 
-| Team-1 name | Team-2/3 canonical name | Included interaction | Core repulsion? |
-|---|---|---|---|
-| `vdw` | `vdw_only` | Non-retarded vdW attraction | No |
-| `dlvo` | `dlvo_classic` | Screened electrostatics + vdW + core | Yes |
-| `cl_retarded` | `cl_retarded` | vdW near-field force multiplied by $r(L)$ | No |
+| Team-1 name     | Team-2/3 canonical name | Included interaction                        | Core repulsion? |
+| --------------- | ----------------------- | ------------------------------------------- | --------------- |
+| `vdw`         | `vdw_only`            | Non-retarded vdW attraction                 | No              |
+| `dlvo`        | `dlvo_classic`        | Screened electrostatics + vdW + core        | Yes             |
+| `cl_retarded` | `cl_retarded`         | vdW near-field force multiplied by $r(L)$ | No              |
 
 Two material classes are compared through their documented Hamaker constants:
 
-| Material label | $A_H$ |
-|---|---:|
+| Material label |                           $A_H$ |
+| -------------- | --------------------------------: |
 | `fatty_acid` | $0.5\times10^{-21}\ \mathrm{J}$ |
-| `PMBC` | $5\times10^{-21}\ \mathrm{J}$ |
+| `PMBC`       |   $5\times10^{-21}\ \mathrm{J}$ |
 
 Other values remain `unknown` in Team 2 rather than receiving guessed material labels.
 
 ### 7. Brownian dynamics: deterministic drift plus random motion
 
-> **ELI5:** Every tiny step, a ball does two things: drifts the way the forces point, then gets flicked in a random direction by water molecules. Nothing ever moves perfectly smoothly.
+> **ELI5**
 
-For the one-dimensional pair gap, each Euler–Maruyama step is
+	
+
+ma step is
 
 $$
 L_{n+1}=L_n+\mu F(L_n)\,\Delta t
@@ -249,7 +251,7 @@ then wraps positions into the periodic box. With $`\mathbf{u}_{ij}`$ pointing fr
 
 ### 8. Numerical stability is part of the physical model
 
-> **ELI5:** If a step is too big, a ball can jump clean over the whole sticky zone without ever feeling it — like teleporting past a magnet. So we take tiny steps and cap the strongest forces; that cap is a modelling compromise, not reality.
+> **ELI5:** If a step is too big, a ball can jump clean over the whole sticky zone without ever feeling it - like teleporting past a magnet. So we take tiny steps and cap the strongest forces; that cap is a modelling compromise, not reality.
 
 The appendix default $\Delta t=10^{-4}\ \mathrm{s}$ is unsafe near contact: drift can jump across entire interaction zones. Dynamics runs therefore use
 
@@ -323,10 +325,10 @@ The low diffusion coefficient means randomly distributed particles in a 20 µm b
 
 The final export contains **19 runs with 1,000 recorded frames each**:
 
-| Purpose | Models | Materials | Seeds | Particles | Runs |
-|---|---|---|---|---:|---:|
-| Fair model/material comparison | `vdw`, `dlvo`, `cl_retarded` | fatty acid, PMBC | 0, 1, 42 | 20 | 18 |
-| Separate size exploration | `cl_retarded` | PMBC | 42 | 50 | 1 |
+| Purpose                        | Models                             | Materials        | Seeds    | Particles | Runs |
+| ------------------------------ | ---------------------------------- | ---------------- | -------- | --------: | ---: |
+| Fair model/material comparison | `vdw`, `dlvo`, `cl_retarded` | fatty acid, PMBC | 0, 1, 42 |        20 |   18 |
+| Separate size exploration      | `cl_retarded`                    | PMBC             | 42       |        50 |    1 |
 
 All 18 comparison runs use the same salt concentration (100 mM), 50,000 dynamics steps, $\Delta t=10^{-7}\ \mathrm{s}$, recording every 50 steps, and a 20 nm preclustered start. Their 5 ms observation window is short. The N=50 run is never pooled into N=20 comparisons.
 
@@ -340,14 +342,14 @@ Seeds make the random trajectories reproducible; deterministic run IDs encode th
 
 Team 2 recomputes every unordered pair from positions using the periodic surface gap. Zones are assigned in nanometers without changing the assignment thresholds:
 
-| Zone | Surface gap $L$ | Interpretation |
-|---|---|---|
-| `hard_contact` | $L<2$ nm | Contact range; negative values diagnose overlap |
-| `dlvo_zone` | $2\le L<5$ nm | Short range where DLVO contributions can matter strongly |
-| `near_gap` | $5\le L<10$ nm | Near range; electrostatics already strongly screened |
-| `meso_gap` | $10\le L<30$ nm | Mesoscale proximity used by the default handoff graph |
-| `far_gap` | $30\le L<100$ nm | Exploratory proximity, not a hard binding claim |
-| `separated` | $L\ge100$ nm | Outside the exported non-separated pair range |
+| Zone             | Surface gap $L$  | Interpretation                                           |
+| ---------------- | ------------------ | -------------------------------------------------------- |
+| `hard_contact` | $L<2$ nm         | Contact range; negative values diagnose overlap          |
+| `dlvo_zone`    | $2\le L<5$ nm    | Short range where DLVO contributions can matter strongly |
+| `near_gap`     | $5\le L<10$ nm   | Near range; electrostatics already strongly screened     |
+| `meso_gap`     | $10\le L<30$ nm  | Mesoscale proximity used by the default handoff graph    |
+| `far_gap`      | $30\le L<100$ nm | Exploratory proximity, not a hard binding claim          |
+| `separated`    | $L\ge100$ nm     | Outside the exported non-separated pair range            |
 
 These labels describe geometry, not independent measurements of bonding strength.
 
@@ -355,11 +357,11 @@ These labels describe geometry, not independent measurements of bonding strength
 
 For every frame, Team 2 constructs three undirected graphs from the same pair table:
 
-| Graph | Allowed zones | Equivalent gap rule |
-|---|---|---|
-| `hard` | `hard_contact` | $L<2$ nm |
-| `near` | hard + DLVO + near | $L<10$ nm |
-| `meso` | hard + DLVO + near + meso | $L<30$ nm |
+| Graph    | Allowed zones             | Equivalent gap rule |
+| -------- | ------------------------- | ------------------- |
+| `hard` | `hard_contact`          | $L<2$ nm          |
+| `near` | hard + DLVO + near        | $L<10$ nm         |
+| `meso` | hard + DLVO + near + meso | $L<30$ nm         |
 
 Every particle remains a node, even when isolated. For a graph with $N$ nodes and $m$ edges, Team 2 records the number of edges, number of connected components, largest component size, sorted component-size distribution, and
 
@@ -373,15 +375,15 @@ Using all three graphs reveals sensitivity to the chosen contact definition inst
 
 The largest connected component determines the primary label:
 
-| Macrostate | Graph rule | Meaning and caution |
-|---|---|---|
-| `monomer_gas` | No edges | No connected pairs under this graph definition |
-| `dimer_dominated` | Largest component has 2 nodes | Pair-dominated configuration |
-| `trimer_like` | Largest component has 3 nodes | Three-node component; not a claim of exact shape |
-| `tetra_like` | Largest has 4 nodes and at least 4 internal edges | **2D compactness proxy**, not a 3D tetrahedron |
-| `loose_four_cluster` | Largest has 4 nodes and fewer than 4 internal edges | Less connected four-node component |
-| `large_cluster` | Largest component has at least 5 nodes | Large connected component under the threshold |
-| `mixed_transition` | Fallback, or all runs too short for the persistence filter | Unclassified/transition label |
+| Macrostate             | Graph rule                                                 | Meaning and caution                                  |
+| ---------------------- | ---------------------------------------------------------- | ---------------------------------------------------- |
+| `monomer_gas`        | No edges                                                   | No connected pairs under this graph definition       |
+| `dimer_dominated`    | Largest component has 2 nodes                              | Pair-dominated configuration                         |
+| `trimer_like`        | Largest component has 3 nodes                              | Three-node component; not a claim of exact shape     |
+| `tetra_like`         | Largest has 4 nodes and at least 4 internal edges          | **2D compactness proxy**, not a 3D tetrahedron |
+| `loose_four_cluster` | Largest has 4 nodes and fewer than 4 internal edges        | Less connected four-node component                   |
+| `large_cluster`      | Largest component has at least 5 nodes                     | Large connected component under the threshold        |
+| `mixed_transition`   | Fallback, or all runs too short for the persistence filter | Unclassified/transition label                        |
 
 The labels are intentionally small and deterministic. They classify graph topology, not membrane chemistry, exact three-dimensional geometry, or a thermodynamic phase.
 
@@ -420,13 +422,13 @@ Seed reproducibility counts distinct simulation seeds in which a state occurs. O
 
 A state receives `candidate=true` only when all five required pieces of evidence are available and pass:
 
-| Criterion | Required value |
-|---|---:|
-| Relative frequency | $>0.05$ |
-| Mean dwell time | $>5$ frames |
-| Return probability | $>0.3$ within 50 frames |
-| Seed reproducibility | State observed in at least 3 seeds, with at least 3 seeds available |
-| Raw-label agreement under jitter | $>0.7$ |
+| Criterion                        |                                                      Required value |
+| -------------------------------- | ------------------------------------------------------------------: |
+| Relative frequency               |                                                           $>0.05$ |
+| Mean dwell time                  |                                                       $>5$ frames |
+| Return probability               |                                           $>0.3$ within 50 frames |
+| Seed reproducibility             | State observed in at least 3 seeds, with at least 3 seeds available |
+| Raw-label agreement under jitter |                                                            $>0.7$ |
 
 Unavailable evidence never counts as success. A passing state is a **heuristic attractor candidate**; these are **not formal attractor proofs** and do not by themselves establish attractor memory. A formal attractor claim would require a dynamical-systems argument about invariant sets and basins of attraction, beyond these finite noisy trajectories.
 
@@ -438,7 +440,7 @@ The figure labels are German because they were generated for the seminar; the ex
 
 ### Team 1: Forces and potentials
 
-#### Figure 1 — Force curves for PMBC
+#### Figure 1 - Force curves for PMBC
 
 ![Team 1: PMBC force curves](team1_forces/figures/01_kraftkurven_pmbc.png)
 
@@ -447,16 +449,16 @@ The figure labels are German because they were generated for the seminar; the ex
 - **How to read it:** the visible positive branch shows the extremely rapid decay of electrostatic repulsion with gap. Equal horizontal distance is not equal force change: both axes span orders of magnitude.
 - **Critical plotting caveat:** the notebook passes **signed** forces to Matplotlib's `loglog`. Negative values cannot appear on a standard logarithmic axis. Attractive vdW and CL curves, and DLVO regions where the net force is attractive, are therefore omitted rather than drawn as zero. Use the equations and Figure 2 for the attractive signs and energy scales; do not interpret an invisible curve as zero force.
 
-#### Figure 2 — Interaction potentials normalized by thermal energy
+#### Figure 2 - Interaction potentials normalized by thermal energy
 
 ![Team 1: interaction potentials](team1_forces/figures/02_potentiale.png)
 
-- **In plain words:** how deep the energy valley is at each gap — valleys are where a pair prefers to sit, and a deeper valley means a stickier pair.
+- **In plain words:** how deep the energy valley is at each gap - valleys are where a pair prefers to sit, and a deeper valley means a stickier pair.
 - **What it shows:** $U/k_BT$ on a linear vertical axis versus logarithmic surface gap for fatty acid and PMBC, comparing vdW with DLVO.
 - **How to read it:** negative values indicate attractive potential energy; the horizontal zero line is the reference. PMBC has the tenfold larger Hamaker constant and therefore the much deeper vdW well. At larger gaps, electrostatic and core contributions decay, so each DLVO curve approaches its corresponding vdW curve.
 - **Interpretation:** for fatty acid, electrostatic repulsion substantially offsets the weaker attraction near contact, producing a much shallower DLVO well. For PMBC, the attractive well is many $k_BT$ deep at the smallest plotted gaps. A deep pair potential supports possible stabilization, but does not prove many-particle cluster formation or long-time memory.
 
-#### Figure 3 — Retardation-factor parameter sweep
+#### Figure 3 - Retardation-factor parameter sweep
 
 ![Team 1: retardation factor](team1_forces/figures/03_retardierungsfaktor.png)
 
@@ -465,7 +467,7 @@ The figure labels are German because they were generated for the seminar; the ex
 - **How to read it:** every curve decreases monotonically. For the same $L_r$, $p=2$ suppresses the factor more rapidly than $p=1$; for the same $p$, a larger $L_r$ preserves more of the near-field interaction to larger gaps.
 - **Interpretation and caveat:** this plot verifies the intended attenuation behavior of the educational approximation. It is not a fit to experimental material response and not a substitute for a full Lifshitz/Matsubara calculation.
 
-#### Figure 4 — DLVO versus retarded CL by material
+#### Figure 4 - DLVO versus retarded CL by material
 
 ![Team 1: DLVO versus retarded CL](team1_forces/figures/04_dlvo_vs_cl_retarded.png)
 
@@ -476,25 +478,25 @@ The figure labels are German because they were generated for the seminar; the ex
 
 ### Team 1: Pair and cluster dynamics
 
-#### Figure 5 — Example pair trajectories
+#### Figure 5 - Example pair trajectories
 
 ![Team 1: pair trajectories](team1_forces/figures/05_paartrajektorien.png)
 
-- **In plain words:** watch one pair approach over time — do the balls snap together, hover, or drift apart?
+- **In plain words:** watch one pair approach over time - do the balls snap together, hover, or drift apart?
 - **What it shows:** PMBC pair gap versus time for DLVO and retarded CL, starting at $L_0=20\ \mathrm{nm}$ with seed 0. Gray bands label the distance zones.
 - **How to read it:** both trajectories rapidly leave the 20 nm starting region and collapse toward the lower pair-dynamics boundary, then remain near contact for the displayed 0.1 s.
-- **Interpretation and caveats:** under these settings, both model variants produce strong pair approach. This is one pair, one material, and one seed—not an ensemble result. The 1D pair clamps the gap to its allowed interval, so the plot should not be used to diagnose the deep overlaps later reconstructed from the 2D export.
+- **Interpretation and caveats:** under these settings, both model variants produce strong pair approach. This is one pair, one material, and one seed-not an ensemble result. The 1D pair clamps the gap to its allowed interval, so the plot should not be used to diagnose the deep overlaps later reconstructed from the 2D export.
 
-#### Figure 6 — Pair dwell-time histograms
+#### Figure 6 - Pair dwell-time histograms
 
 ![Team 1: pair dwell-time histograms](team1_forces/figures/06_verweildauer_histogramme.png)
 
-- **In plain words:** a tally of how long pairs linger in each distance zone — bars farther right mean longer visits.
+- **In plain words:** a tally of how long pairs linger in each distance zone - bars farther right mean longer visits.
 - **What it shows:** pooled contiguous dwell durations in `dlvo_zone`, `near_gap`, and `meso_gap` for DLVO and retarded CL, across materials and seeds. Vertical axes count observed runs; horizontal axes show seconds.
 - **How to read it:** compare shapes within each panel, not bar heights across panels without checking the different horizontal scales. Bins near zero represent short stays; mass at the far right represents long stays.
 - **Critical plotting caveat:** the generating code clips displayed durations at **5 ms** before histogramming. The rightmost bin therefore accumulates longer durations and is not a precise lifetime estimate. These pair-level dwells also use a different definition and simulation setup from Team 2's macrostate dwells.
 
-#### Figure 7 — Dilute random baseline
+#### Figure 7 - Dilute random baseline
 
 ![Team 1: dilute baseline](team1_forces/figures/07_verduennte_basislinie.png)
 
@@ -503,7 +505,7 @@ The figure labels are German because they were generated for the seminar; the ex
 - **How to read it:** most particles remain far outside nanometer-scale interaction range; only close pairs contribute graph edges. Marker size is a plotting choice, not a to-scale drawing of a 500 nm radius.
 - **Interpretation and caveat:** this run shows no large emergent cluster under the dilute baseline conditions. It motivates preclustered starts for persistence analysis, but one short simulation cannot prove that spontaneous formation is impossible in general.
 
-#### Figure 8 — Persistence from different preclustered gaps
+#### Figure 8 - Persistence from different preclustered gaps
 
 ![Team 1: preclustered persistence sweep](team1_forces/figures/08_clusterpersistenz_gap_sweep.png)
 
@@ -512,27 +514,27 @@ The figure labels are German because they were generated for the seminar; the ex
 - **How to read it:** a falling curve means that the initially connected lattice breaks into smaller components; a rising curve means that separate components become connected under the 30 nm contact rule. At 5 nm, the DLVO examples remain at size 20. At 20 nm, they finish at size 20 despite transient dips, while the CL examples fragment into smaller components. At 50 nm, the initial graph is disconnected and some components later grow.
 - **Interpretation and caveats:** initial gap and contact topology strongly affect the result. These are persistence/reconnection experiments from ordered starts, **not spontaneous formation from a dilute phase**. CL lacks core repulsion, so its compact components may also involve overlap artefacts.
 
-#### Figure 9 — Full component-size distributions for different N
+#### Figure 9 - Full component-size distributions for different N
 
 ![Team 1: component-size distributions](team1_forces/figures/09_clustergroessenverteilung.png)
 
-- **In plain words:** a census of group sizes at the end of each run — counting singles, pairs, threes, and bigger groups.
+- **In plain words:** a census of group sizes at the end of each run - counting singles, pairs, threes, and bigger groups.
 - **What it shows:** all connected-component sizes from the final 20 frames of retarded-CL/PMBC runs with N=10, 20, and 50 and $L_0=20\ \mathrm{nm}$.
 - **How to read it:** the horizontal axis is component size and the vertical axis is component occurrence count. Every frame contributes all of its components, so these are not particle counts or normalized probabilities. The N=20 example concentrates much mass at size four; the N=50 example concentrates on small components.
 - **Interpretation and caveats:** component-size distributions contain more information than the largest component alone. However, the panels are exploratory runs with different N, not a controlled convergence study, and the absence of core repulsion limits physical interpretation.
 
-#### Figure 10 — Contact-graph snapshot and coincident particles
+#### Figure 10 - Contact-graph snapshot and coincident particles
 
 ![Team 1: contact graph snapshot](team1_forces/figures/10_kontaktgraph_snapshot.png)
 
-- **In plain words:** the final "who is touching whom" friendship map — dots are balls, red lines are contacts.
+- **In plain words:** the final "who is touching whom" friendship map - dots are balls, red lines are contacts.
 - **What it shows:** the final N=20 retarded-CL/PMBC contact graph after 5 ms, with nodes placed at particle coordinates and hard-contact edges intended in red.
 - **How to read it:** node positions show several spatially separated groups. Fewer than 20 markers are visibly distinguishable because particles can nearly coincide; overlapping hard-contact edges can collapse to invisible line segments.
 - **Critical interpretation caveat:** do not count particles or infer component sizes by counting visible dots. The underlying graph still has 20 node IDs. This snapshot makes the no-core-repulsion artefact tangible: a graph can report contact topology even when the 2D geometry is not a realistic arrangement of separate spheres.
 
 ### Team 1: Sensitivity and controls
 
-#### Figure 11 — Hamaker constant × salt heatmap
+#### Figure 11 - Hamaker constant × salt heatmap
 
 ![Team 1: Hamaker and salt heatmap](team1_forces/figures/11_heatmap_ah_salz.png)
 
@@ -541,7 +543,7 @@ The figure labels are German because they were generated for the seminar; the ex
 - **How to read it:** each cell is one simulation outcome; brighter yellow means a larger average component. Rows are constant across salt because `cl_retarded` contains no electrostatic term, so changing the Debye length cannot affect this model variant.
 - **Interpretation and caveats:** the non-monotonic Hamaker trend is a property of these preclustered graph dynamics, not a general law that stronger attraction produces smaller clusters. Initial lattice connectivity, threshold-based components, the force cap, and deep overlaps all influence the outcome. Salt independence here must not be generalized to full DLVO or full Lifshitz physics.
 
-#### Figure 12 — Brownian-noise sweep in the pair model
+#### Figure 12 - Brownian-noise sweep in the pair model
 
 ![Team 1: noise sweep](team1_forces/figures/12_rauschen_sweep.png)
 
@@ -550,7 +552,7 @@ The figure labels are German because they were generated for the seminar; the ex
 - **How to read it:** higher $D$ corresponds to stronger random kicks. The displayed escape time decreases as $D$ increases, while the contact probabilities are all 1.00 to the displayed precision.
 - **Interpretation and caveats:** stronger noise can accelerate the first exit even when almost all sampled gaps remain below 30 nm. First-passage time and time-averaged contact probability measure different things. These are short pair simulations with three seeds, not a general noise-scaling law for clusters.
 
-#### Figure 13 — Contact-definition sensitivity for one snapshot
+#### Figure 13 - Contact-definition sensitivity for one snapshot
 
 ![Team 1: contact-definition sensitivity](team1_forces/figures/13_kontaktdefinition.png)
 
@@ -559,27 +561,27 @@ The figure labels are German because they were generated for the seminar; the ex
 - **How to read it:** all four bars reach four, meaning that the largest component has the same size under all four definitions for this snapshot. This does not imply that edge counts or other components are identical.
 - **Interpretation and caveat:** the selected configuration is threshold-insensitive in this one metric. It is not evidence that contact definitions never matter; Team 2's jitter and hard/near/meso comparisons provide the broader sensitivity analysis.
 
-#### Figure 14 — Negative control with elevated diffusion
+#### Figure 14 - Negative control with elevated diffusion
 
 ![Team 1: negative control](team1_forces/figures/14_negativkontrolle.png)
 
-- **In plain words:** the placebo run, with forces switched off, showing what shaking alone does — so we know the measuring stick is not inventing clusters.
+- **In plain words:** the placebo run, with forces switched off, showing what shaking alone does - so we know the measuring stick is not inventing clusters.
 - **What it shows:** largest component over 2 ms for a force-free control ($A_H=0$) and a PMBC-strength retarded-CL run, both with $D=10^{-14}\ \mathrm{m^2\,s^{-1}}$, N=20, and the same preclustered start.
 - **How to read it:** the force-free blue trace remains near the initial size 20, with brief drops, while the orange interacting trace breaks down to a largest component of four.
 - **Interpretation and caveats:** removing the interaction changes graph persistence under this deliberately high-noise control. The control does not show cluster birth from a dilute phase, and its $D$ is 100 times the standard $10^{-16}\ \mathrm{m^2\,s^{-1}}$, so its numerical trace must not be conflated with the main export.
 
 ### Team 2: Final N=20 macrostate analysis
 
-#### Figure 15 — Raw versus persistence-filtered labels
+#### Figure 15 - Raw versus persistence-filtered labels
 
 ![Team 2: raw versus filtered sequence](team2_macrostates/figures/01_roh_vs_gefiltert.png)
 
-- **In plain words:** before/after of the label-smoother — which brief flickering labels did the filter erase?
+- **In plain words:** before/after of the label-smoother - which brief flickering labels did the filter erase?
 - **What it shows:** the run with the most raw/filtered changes: hard-graph labels for `vdw_A5.0e-21_I100_N20_s0`. The wide pale-blue line is raw; the thin red line is filtered. Nine frames change.
 - **How to read it:** brief early excursions through `monomer_gas`, `dimer_dominated`, `trimer_like`, and `loose_four_cluster` are replaced by the persistent `tetra_like` state. Horizontal overlap elsewhere means both sequences agree.
 - **Interpretation and caveats:** this is a deliberately selected extreme example, not a typical meso sequence. Across the full export only **57 of 57,000** state rows change (**0.1%**), and **no N=20 meso row changes**. The filter therefore has almost no effect on the final meso conclusions; its heuristic nature still matters for noisier data.
 
-#### Figure 16 — Distribution of the largest component by model and material
+#### Figure 16 - Distribution of the largest component by model and material
 
 ![Team 2: largest-component distributions](team2_macrostates/figures/02_clustergroessen_modelle.png)
 
@@ -588,32 +590,32 @@ The figure labels are German because they were generated for the seminar; the ex
 - **How to read it:** outlined blue and orange histograms show PMBC and fatty acid. CL and vdW put substantial mass at four, whereas DLVO places most mass at 20 but also includes smaller large-cluster sizes.
 - **Interpretation and caveats:** the figure supports a model/material difference in coarse-grained connectivity. Because every main run starts preclustered, size 20 is an initially available state and must not be presented as spontaneous aggregation. For vdW and CL, deep overlaps further restrict physical interpretation.
 
-#### Figure 17 — Material comparison of filtered macrostates
+#### Figure 17 - Material comparison of filtered macrostates
 
 ![Team 2: material comparison](team2_macrostates/figures/07_materialvergleich.png)
 
-- **In plain words:** a time budget per model and material — which state label each one spends its 5 ms in.
+- **In plain words:** a time budget per model and material - which state label each one spends its 5 ms in.
 - **What it shows:** relative filtered-state frequencies for PMBC and fatty acid in each model's N=20 meso sequences, pooled over three seeds.
 - **How to read it:** within each panel, bars of one color sum to one. CL/PMBC is 93.67% `tetra_like`, while CL/fatty-acid is 60.27% `large_cluster` and 39.33% `tetra_like`. DLVO is 100% `large_cluster` for both materials. vdW/PMBC is 97.30% `tetra_like`; vdW/fatty-acid is 78.13% `tetra_like` and 21.50% `large_cluster`, with a small loose-four remainder.
 - **Interpretation and caveats:** material dependence is visible in CL and vdW but not in the coarse DLVO label. Identical DLVO labels do not imply identical microscopic forces or geometry. All frequencies describe this 5 ms, preclustered ensemble.
 
 The corresponding current CSV summaries are:
 
-| Model | Material | State | Frequency | Mean dwell (frames) |
-|---|---|---|---:|---:|
-| `cl_retarded` | PMBC | `tetra_like` | 0.9367 | 936.7 |
-| `cl_retarded` | PMBC | `large_cluster` | 0.0633 | 63.3 |
-| `cl_retarded` | fatty acid | `large_cluster` | 0.6027 | 361.6 |
-| `cl_retarded` | fatty acid | `tetra_like` | 0.3933 | 236.0 |
-| `dlvo_classic` | either | `large_cluster` | 1.0000 | 1000.0 |
-| `vdw_only` | PMBC | `tetra_like` | 0.9730 | 973.0 |
-| `vdw_only` | PMBC | `large_cluster` | 0.0270 | 27.0 |
-| `vdw_only` | fatty acid | `tetra_like` | 0.7813 | 468.8 |
-| `vdw_only` | fatty acid | `large_cluster` | 0.2150 | 129.0 |
+| Model            | Material   | State             | Frequency | Mean dwell (frames) |
+| ---------------- | ---------- | ----------------- | --------: | ------------------: |
+| `cl_retarded`  | PMBC       | `tetra_like`    |    0.9367 |               936.7 |
+| `cl_retarded`  | PMBC       | `large_cluster` |    0.0633 |                63.3 |
+| `cl_retarded`  | fatty acid | `large_cluster` |    0.6027 |               361.6 |
+| `cl_retarded`  | fatty acid | `tetra_like`    |    0.3933 |               236.0 |
+| `dlvo_classic` | either     | `large_cluster` |    1.0000 |              1000.0 |
+| `vdw_only`     | PMBC       | `tetra_like`    |    0.9730 |               973.0 |
+| `vdw_only`     | PMBC       | `large_cluster` |    0.0270 |                27.0 |
+| `vdw_only`     | fatty acid | `tetra_like`    |    0.7813 |               468.8 |
+| `vdw_only`     | fatty acid | `large_cluster` |    0.2150 |               129.0 |
 
 **Overlap warning for all vdW/CL interpretations:** in the current non-separated N=20 pair rows, the pooled fraction with extreme overlap $L<-900\ \mathrm{nm}$ is 91.8% for vdW/PMBC, 72.1% for vdW/fatty-acid, 87.2% for CL/PMBC, and 33.8% for CL/fatty-acid. Both DLVO groups have 0.0%. Each fraction uses all N=20 rows for that model/material group in `pair_zones.csv` as its denominator. Consequently, vdW/CL `tetra_like` and `large_cluster` labels can describe classes containing nearly coincident particles, not realistic separated-sphere geometries.
 
-#### Figure 18 — Dwell-time distributions
+#### Figure 18 - Dwell-time distributions
 
 ![Team 2: dwell-time distributions](team2_macrostates/figures/03_dwell_times.png)
 
@@ -622,36 +624,36 @@ The corresponding current CSV summaries are:
 - **How to read it:** `tetra_like` and `large_cluster` include runs approaching the full 1,000-frame window, while `loose_four_cluster` runs are around an order of magnitude shorter. Raw and filtered boxes coincide because no meso labels change under the filter.
 - **Interpretation and caveats:** dominant states are persistent within the observation window, while the loose-four label is transitional. Runs touching sequence boundaries are censored, and a 1,000-frame dwell does not prove that a state would persist beyond 5 ms.
 
-#### Figure 19 — Filtered transition matrices
+#### Figure 19 - Filtered transition matrices
 
 ![Team 2: transition matrices](team2_macrostates/figures/04_transition_matrizen.png)
 
-- **In plain words:** a "where next?" grid — rows are the current label, columns are the next label, brighter means more likely.
+- **In plain words:** a "where next?" grid - rows are the current label, columns are the next label, brighter means more likely.
 - **What it shows:** row-normalized filtered transitions for each model, pooled over both materials and three seeds in the N=20 meso graph. Rows are source states and columns are targets.
 - **How to read it:** yellow is probability one, dark purple is near zero, and blank/white rows have no outgoing transitions to normalize. Strong diagonal blocks mean that frame-to-frame self-transitions dominate. Small off-diagonal probabilities can be visually hard to distinguish after long persistent runs dominate the counts.
 - **Interpretation and caveats:** the matrices support short-horizon label persistence. Pooling materials can hide subgroup differences, and self-transition probability is not return-after-departure probability. DLVO's observed `large_cluster` row is diagonal, while states without outgoing observations are unavailable rather than zero-probability rows.
 
-#### Figure 20 — Return probability after departure
+#### Figure 20 - Return probability after departure
 
 ![Team 2: return probabilities](team2_macrostates/figures/05_return_probability.png)
 
 - **In plain words:** when the system leaves a state, how likely is it to come back soon? The dashed line is the pass mark.
 - **What it shows:** filtered meso return probability within 50 frames, pooled by **model and state across both materials**. Returns and eligible departures are summed before dividing. The dashed line is the heuristic threshold 0.3.
 - **How to read it:** vdW `tetra_like` has pooled return probability 0.50. CL and vdW `large_cluster` each have 0.25 when both materials are pooled. Zero-height measured bars and missing/unavailable values must be distinguished in the CSV.
-- **Interpretation and caveats:** this pooled figure is not the candidate table. In the fatty-acid subgroup, CL `large_cluster` and vdW `large_cluster` each have 0.40 and therefore pass that criterion, while vdW `tetra_like` has 0.50. **DLVO has zero eligible departures from its dominant state, so its return value is unavailable—not zero.** Few eligible events and the 5 ms window make these probabilities coarse estimates.
+- **Interpretation and caveats:** this pooled figure is not the candidate table. In the fatty-acid subgroup, CL `large_cluster` and vdW `large_cluster` each have 0.40 and therefore pass that criterion, while vdW `tetra_like` has 0.50. **DLVO has zero eligible departures from its dominant state, so its return value is unavailable-not zero.** Few eligible events and the 5 ms window make these probabilities coarse estimates.
 
 The four rows passing all five heuristics in `attractor_candidates.csv` are:
 
-| Model | Material | Graph | State | Frequency | Mean dwell | Return probability |
-|---|---|---|---|---:|---:|---:|
-| `cl_retarded` | fatty acid | meso | `large_cluster` | 0.6027 | 361.6 frames | 0.40 |
-| `vdw_only` | fatty acid | meso | `tetra_like` | 0.7813 | 468.8 frames | 0.50 |
-| `vdw_only` | fatty acid | meso | `large_cluster` | 0.2150 | 129.0 frames | 0.40 |
-| `vdw_only` | fatty acid | near | `dimer_dominated` | 0.0983 | 49.2 frames | 0.50 |
+| Model           | Material   | Graph | State               | Frequency |   Mean dwell | Return probability |
+| --------------- | ---------- | ----- | ------------------- | --------: | -----------: | -----------------: |
+| `cl_retarded` | fatty acid | meso  | `large_cluster`   |    0.6027 | 361.6 frames |               0.40 |
+| `vdw_only`    | fatty acid | meso  | `tetra_like`      |    0.7813 | 468.8 frames |               0.50 |
+| `vdw_only`    | fatty acid | meso  | `large_cluster`   |    0.2150 | 129.0 frames |               0.40 |
+| `vdw_only`    | fatty acid | near  | `dimer_dominated` |    0.0983 |  49.2 frames |               0.50 |
 
 All four belong to models affected by the deep-overlap limitation. They are reproducible, persistent, return-prone **labels under this model and rule set**, not formal attractor proofs or evidence of physically realistic non-overlapping clusters.
 
-#### Figure 21 — Robustness to 1 nm position jitter
+#### Figure 21 - Robustness to 1 nm position jitter
 
 ![Team 2: jitter label agreement](team2_macrostates/figures/06_label_agreement_jitter.png)
 
@@ -725,18 +727,18 @@ The order matters: notebook 01 computes zones, pairs, graphs, features, and sequ
 
 ### Units and input contract
 
-| Quantity | Convention |
-|---|---|
-| Positions `x`, `y`, internal lengths | meters |
-| `L_nm`, `R_nm` | nanometers in the named columns |
-| Time `t` or `time` | seconds |
-| Force | pN in analysis outputs |
-| Energy | $U/k_BT$ in analysis outputs |
-| Hamaker constant `A_H` | joules |
-| Mobility | $\mathrm{m\,N^{-1}\,s^{-1}}$ |
-| Diffusion and exported `noise` | $\mathrm{m^2\,s^{-1}}$; `noise` carries $D$ |
-| Periodic box | fixed at 20 µm; not inferred from observed coordinates |
-| Sign | negative radial force = attraction; positive = repulsion |
+| Quantity                                 | Convention                                               |
+| ---------------------------------------- | -------------------------------------------------------- |
+| Positions `x`, `y`, internal lengths | meters                                                   |
+| `L_nm`, `R_nm`                       | nanometers in the named columns                          |
+| Time `t` or `time`                   | seconds                                                  |
+| Force                                    | pN in analysis outputs                                   |
+| Energy                                   | $U/k_BT$ in analysis outputs                           |
+| Hamaker constant `A_H`                 | joules                                                   |
+| Mobility                                 | $\mathrm{m\,N^{-1}\,s^{-1}}$                           |
+| Diffusion and exported `noise`         | $\mathrm{m^2\,s^{-1}}$; `noise` carries $D$        |
+| Periodic box                             | fixed at 20 µm; not inferred from observed coordinates  |
+| Sign                                     | negative radial force = attraction; positive = repulsion |
 
 Team 2 validates required columns, finite values, unique frame/particle rows, consistent particle sets, and one model/material parameter set per run. Particle IDs are preserved rather than replaced with assumed contiguous indices.
 
@@ -744,12 +746,12 @@ Team 2 validates required columns, finite values, unique frame/particle rows, co
 
 All files are in `team1_forces/data/processed/`.
 
-| File | Exact columns | Contents |
-|---|---|---|
-| `positions.csv` | `run_id, seed, t, particle_id, x, y, model_type, A_H, lambda_D, noise, T` | One row per particle and recorded frame |
-| `pairs.csv` | `run_id, seed, t, i, j, L_nm, contact_zone, force_mode` | Non-separated pairs ($L<100$ nm) |
-| `cluster_metrics.csv` | `run_id, seed, t, largest_cluster, mean_degree, n_edges, n_components` | Frame-level Team-1 graph summaries |
-| `parameters.csv` | `run_id, model_type, R_nm, A_H, salt_mM, L_ret_nm, p_ret, dt, mobility, diffusion` | One parameter row per run |
+| File                    | Exact columns                                                                        | Contents                                |
+| ----------------------- | ------------------------------------------------------------------------------------ | --------------------------------------- |
+| `positions.csv`       | `run_id, seed, t, particle_id, x, y, model_type, A_H, lambda_D, noise, T`          | One row per particle and recorded frame |
+| `pairs.csv`           | `run_id, seed, t, i, j, L_nm, contact_zone, force_mode`                            | Non-separated pairs ($L<100$ nm)      |
+| `cluster_metrics.csv` | `run_id, seed, t, largest_cluster, mean_degree, n_edges, n_components`             | Frame-level Team-1 graph summaries      |
+| `parameters.csv`      | `run_id, model_type, R_nm, A_H, salt_mM, L_ret_nm, p_ret, dt, mobility, diffusion` | One parameter row per run               |
 
 Separated pairs can be reconstructed from positions and the periodic box. Run IDs deterministically encode model and important parameter values, including particle count and seed for the final export.
 
@@ -757,17 +759,17 @@ Separated pairs can be reconstructed from positions and the periodic box. Run ID
 
 All files are in `team2_macrostates/data/processed/`.
 
-| File | Purpose |
-|---|---|
-| `pair_zones.csv` | Every non-separated pair with periodic surface gap and exact zone |
-| `graph_features.csv` | Hard/near/meso features per frame, including full sorted component sizes |
-| `macrostate_sequences.csv` | Raw and filtered labels per frame and graph with metadata |
-| `dwell_times.csv` | Contiguous runs, durations, and left/right censoring flags |
-| `sequence_metrics.csv` | Per-run frequencies, dwell, self-transitions, returns, agreement, and seed counts |
-| `transition_matrices.csv` | Long-format source/target counts and row-normalized probabilities |
-| `attractor_candidates.csv` | Aggregated metrics, five individual heuristic flags, and overall candidate flag |
-| `label_robustness.csv` | Raw versus jittered labels for every frame and graph |
-| `team3_macrostates.csv` | Meso-only downstream handoff |
+| File                         | Purpose                                                                           |
+| ---------------------------- | --------------------------------------------------------------------------------- |
+| `pair_zones.csv`           | Every non-separated pair with periodic surface gap and exact zone                 |
+| `graph_features.csv`       | Hard/near/meso features per frame, including full sorted component sizes          |
+| `macrostate_sequences.csv` | Raw and filtered labels per frame and graph with metadata                         |
+| `dwell_times.csv`          | Contiguous runs, durations, and left/right censoring flags                        |
+| `sequence_metrics.csv`     | Per-run frequencies, dwell, self-transitions, returns, agreement, and seed counts |
+| `transition_matrices.csv`  | Long-format source/target counts and row-normalized probabilities                 |
+| `attractor_candidates.csv` | Aggregated metrics, five individual heuristic flags, and overall candidate flag   |
+| `label_robustness.csv`     | Raw versus jittered labels for every frame and graph                              |
+| `team3_macrostates.csv`    | Meso-only downstream handoff                                                      |
 
 <details>
 <summary>Full Team-2 column schemas</summary>
@@ -813,7 +815,7 @@ The companion reports contain German prose and additional methodological context
 
 These are boundaries on interpretation, not minor footnotes:
 
-1. **No spontaneous-formation claim.** The main export starts from preclustered lattices. It measures persistence, fragmentation, reconnection, and return—not formation from an initially dilute random phase.
+1. **No spontaneous-formation claim.** The main export starts from preclustered lattices. It measures persistence, fragmentation, reconnection, and return-not formation from an initially dilute random phase.
 2. **Deep overlap in vdW and CL.** Without core repulsion, particles can nearly coincide. A large fraction of their non-separated pair rows has $L<-900$ nm, so graph-based compact states must not be interpreted as realistic non-overlapping sphere assemblies.
 3. **Simplified CL physics.** The multiplicative retardation factor is educational. There is no full dielectric-response, Matsubara-mode, TE/TM, or shell-model calculation, and no invented `cl_meso_hypothesis` force.
 4. **Didactic dynamics.** The diffusion coefficient is chosen for the assignment; the 20 pN force cap and $10^{-7}$ s time step prioritize stability. Two-dimensional motion omits hydrodynamics, explicit membrane chemistry, many-body screening, and three-dimensional geometry.
@@ -831,38 +833,38 @@ These are boundaries on interpretation, not minor footnotes:
 
 ### Glossary
 
-| Term | Meaning in this project |
-|---|---|
-| **Protocell** | A simplified spherical prebiotic-cell model with radius 500 nm |
-| **Surface gap $L$** | Center distance minus two radii; negative values indicate overlap |
-| **Hamaker constant $A_H$** | Material/solvent parameter setting vdW interaction strength |
-| **DLVO** | Screened electrostatic repulsion plus vdW attraction; this implementation also adds core repulsion |
-| **Casimir–Lifshitz (CL)** | Fluctuation-induced electromagnetic interaction framework; simulated here only through a retarded vdW approximation |
-| **Retardation** | Distance-dependent weakening represented by $r(L)\le1$ |
-| **Debye length** | Exponential screening length of the electrostatic term in electrolyte |
-| **Brownian dynamics** | Deterministic force drift plus Gaussian thermal noise |
-| **Minimum image** | Shortest displacement between particles in a periodic box |
-| **Seed** | Recorded random-generator input used to reproduce a stochastic trajectory |
-| **Contact graph** | Nodes are particles; edges connect pairs within a selected gap range |
-| **Connected component** | Set of nodes reachable from one another through graph edges |
-| **Cluster** | Used here as shorthand for a connected component, not a separately measured chemical object |
-| **Macrostate** | Rule-based label summarizing a graph configuration |
-| **Coarse-graining** | Replacing detailed microscopic coordinates with a lower-dimensional label |
-| **Dwell time** | Duration of one uninterrupted stay in a zone or macrostate |
-| **Self-transition** | Remaining in the same macrostate between consecutive frames |
-| **Return probability** | Fraction of eligible departures followed by a return within a specified horizon |
-| **Censoring** | Incomplete duration/return information at the finite observation boundary |
-| **Jitter** | Small deterministic-seed Gaussian position perturbation used to test labels |
-| **Label agreement** | Fraction of frames whose raw macrostate is unchanged after jitter |
-| **Attractor candidate** | State passing all five seminar heuristics; not a formally proven attractor |
+| Term                               | Meaning in this project                                                                                             |
+| ---------------------------------- | ------------------------------------------------------------------------------------------------------------------- |
+| **Protocell**                | A simplified spherical prebiotic-cell model with radius 500 nm                                                      |
+| **Surface gap $L$**        | Center distance minus two radii; negative values indicate overlap                                                   |
+| **Hamaker constant $A_H$** | Material/solvent parameter setting vdW interaction strength                                                         |
+| **DLVO**                     | Screened electrostatic repulsion plus vdW attraction; this implementation also adds core repulsion                  |
+| **Casimir–Lifshitz (CL)**   | Fluctuation-induced electromagnetic interaction framework; simulated here only through a retarded vdW approximation |
+| **Retardation**              | Distance-dependent weakening represented by $r(L)\le1$                                                            |
+| **Debye length**             | Exponential screening length of the electrostatic term in electrolyte                                               |
+| **Brownian dynamics**        | Deterministic force drift plus Gaussian thermal noise                                                               |
+| **Minimum image**            | Shortest displacement between particles in a periodic box                                                           |
+| **Seed**                     | Recorded random-generator input used to reproduce a stochastic trajectory                                           |
+| **Contact graph**            | Nodes are particles; edges connect pairs within a selected gap range                                                |
+| **Connected component**      | Set of nodes reachable from one another through graph edges                                                         |
+| **Cluster**                  | Used here as shorthand for a connected component, not a separately measured chemical object                         |
+| **Macrostate**               | Rule-based label summarizing a graph configuration                                                                  |
+| **Coarse-graining**          | Replacing detailed microscopic coordinates with a lower-dimensional label                                           |
+| **Dwell time**               | Duration of one uninterrupted stay in a zone or macrostate                                                          |
+| **Self-transition**          | Remaining in the same macrostate between consecutive frames                                                         |
+| **Return probability**       | Fraction of eligible departures followed by a return within a specified horizon                                     |
+| **Censoring**                | Incomplete duration/return information at the finite observation boundary                                           |
+| **Jitter**                   | Small deterministic-seed Gaussian position perturbation used to test labels                                         |
+| **Label agreement**          | Fraction of frames whose raw macrostate is unchanged after jitter                                                   |
+| **Attractor candidate**      | State passing all five seminar heuristics; not a formally proven attractor                                          |
 
 ### Literature pointers
 
-- J. N. Israelachvili, *Intermolecular and Surface Forces* — van der Waals, DLVO, hydration, and surface-force foundations.
-- H. B. G. Casimir and E. M. Lifshitz — foundational work on fluctuation-induced forces and their generalization to dielectric bodies.
-- Derjaguin–Landau and Verwey–Overbeek — the classical DLVO framework.
-- Nunes et al. and Spreng et al. — Casimir interactions between spheres in electrolytes, as listed in the assignment bibliography.
-- Schoger et al. — universal Casimir interactions of dielectric spheres in salt water, as listed in the assignment bibliography.
-- Seyedzahedi and Moradian — electrolytes, layered media, TE/TM modes, and Hamaker coefficients, as listed in the assignment bibliography.
+- J. N. Israelachvili, *Intermolecular and Surface Forces* - van der Waals, DLVO, hydration, and surface-force foundations.
+- H. B. G. Casimir and E. M. Lifshitz - foundational work on fluctuation-induced forces and their generalization to dielectric bodies.
+- Derjaguin–Landau and Verwey–Overbeek - the classical DLVO framework.
+- Nunes et al. and Spreng et al. - Casimir interactions between spheres in electrolytes, as listed in the assignment bibliography.
+- Schoger et al. - universal Casimir interactions of dielectric spheres in salt water, as listed in the assignment bibliography.
+- Seyedzahedi and Moradian - electrolytes, layered media, TE/TM modes, and Hamaker coefficients, as listed in the assignment bibliography.
 
 For implementation details and the exact seminar context, use the companion project documents linked above rather than treating this README as a replacement for the primary literature.

@@ -59,7 +59,7 @@ class BrownianClusterSim:
         np.fill_diagonal(F, 0.0)  # Selbstwechselwirkung: Richtung ist exakt 0
         direction = delta / dist[..., None]
         # §5-Vorzeichenkonvention: F < 0 wirkt anziehend. Die physikalische
-        # Kraft auf Partikel i ist -F * u_ij (u_ij zeigt von i zu j) — der
+        # Kraft auf Partikel i ist -F * u_ij (u_ij zeigt von i zu j) - der
         # Anhang verwendet hier += F*direction und kehrt damit Anziehung und
         # Abstoßung gegeneinander um (Korrektur, siehe report/Grenzen).
         forces = np.sum(-F[..., None] * direction, axis=1)
