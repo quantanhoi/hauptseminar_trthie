@@ -14,6 +14,19 @@ python3.12 -m venv .venv
 .venv/bin/pip install -r requirements.txt
 ```
 
+## Interactive physics demo
+
+[Open the interactive physics page](interactive.html) directly in a modern
+browser — no installation or server is needed. It shows one pair of protocells
+and exposes four learner controls: force recipe, material, salt, and thermal
+motion. Drag protocell B (or focus it and use the arrow keys) to change the
+surface gap, then use Play/Pause and Reset to explore the motion.
+
+The page is an educational, single-pair illustration of the force laws in
+`src/`; it does not reproduce the exported 2D many-particle ensemble. Its
+technical section records the model limits, including the simplified CL
+retardation and the missing core repulsion in the vdW/CL recipes.
+
 ## Notebooks ausführen
 
 ```bash

@@ -1,0 +1,1376 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Why do tiny protocells stick together? — Interactive forces lab</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --ink: #102a43;
+      --muted: #52667a;
+      --paper: #f6f9fc;
+      --card: #ffffff;
+      --line: #d9e2ec;
+      --blue: #1769aa;
+      --blue-deep: #0b4f6c;
+      --blue-pale: #e8f4fb;
+      --coral: #c2410c;
+      --coral-pale: #fff1e8;
+      --teal: #0f766e;
+      --teal-pale: #e6fffb;
+      --gold: #9a6700;
+      --shadow: 0 18px 50px rgba(16, 42, 67, 0.10);
+      --radius: 22px;
+    }
+
+    * { box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      margin: 0;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at 8% 4%, rgba(23, 105, 170, 0.12), transparent 28rem),
+        radial-gradient(circle at 94% 28%, rgba(15, 118, 110, 0.10), transparent 30rem),
+        var(--paper);
+      font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      line-height: 1.55;
+    }
+
+    a { color: var(--blue); }
+    a:hover { color: var(--blue-deep); }
+
+    .skip-link {
+      position: absolute;
+      left: 1rem;
+      top: -100px;
+      z-index: 10;
+      padding: 0.75rem 1rem;
+      background: var(--ink);
+      color: white;
+      border-radius: 0.6rem;
+    }
+
+    .skip-link:focus { top: 1rem; }
+
+    .page {
+      width: min(1120px, calc(100% - 2rem));
+      margin-inline: auto;
+    }
+
+    .hero {
+      padding: clamp(2.5rem, 7vw, 5.5rem) 0 2rem;
+    }
+
+    .eyebrow {
+      margin: 0 0 0.7rem;
+      color: var(--blue);
+      font-size: 0.78rem;
+      font-weight: 800;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+    }
+
+    h1, h2, h3 { line-height: 1.16; }
+
+    h1 {
+      max-width: 880px;
+      margin: 0;
+      font-size: clamp(2.3rem, 6.5vw, 4.8rem);
+      letter-spacing: -0.045em;
+    }
+
+    h2 {
+      margin: 0;
+      font-size: clamp(1.35rem, 3vw, 1.9rem);
+      letter-spacing: -0.02em;
+    }
+
+    h3 { margin: 0 0 0.35rem; font-size: 1.02rem; }
+
+    .lede {
+      max-width: 720px;
+      margin: 1.1rem 0 0;
+      color: #334e68;
+      font-size: clamp(1.02rem, 2vw, 1.2rem);
+    }
+
+    .concept-row {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 0.8rem;
+      margin: 1.8rem 0 2rem;
+    }
+
+    .concept {
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+      padding: 0.9rem 1rem;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      background: rgba(255, 255, 255, 0.72);
+      font-size: 0.92rem;
+      font-weight: 700;
+    }
+
+    .concept-icon {
+      display: grid;
+      flex: 0 0 2.3rem;
+      width: 2.3rem;
+      height: 2.3rem;
+      place-items: center;
+      border-radius: 999px;
+      font-size: 1.1rem;
+    }
+
+    .concept.pull .concept-icon { color: var(--coral); background: var(--coral-pale); }
+    .concept.push .concept-icon { color: var(--teal); background: var(--teal-pale); }
+    .concept.shake .concept-icon { color: var(--gold); background: #fff8e1; }
+
+    .lab-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.55fr) minmax(280px, 0.75fr);
+      gap: 1.25rem;
+      align-items: start;
+    }
+
+    .card {
+      min-width: 0;
+      border: 1px solid rgba(217, 226, 236, 0.9);
+      border-radius: var(--radius);
+      background: var(--card);
+      box-shadow: var(--shadow);
+    }
+
+    .scene-card { overflow: hidden; }
+
+    .card-heading {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 1rem;
+      padding: 1.25rem 1.4rem 0;
+    }
+
+    .card-kicker {
+      margin: 0 0 0.25rem;
+      color: var(--muted);
+      font-size: 0.72rem;
+      font-weight: 800;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    .scene-wrap {
+      position: relative;
+      padding: 0.35rem 0.75rem 0;
+    }
+
+    #scene {
+      display: block;
+      width: 100%;
+      height: auto;
+      overflow: visible;
+      border-radius: 18px;
+    }
+
+    #right-particle {
+      cursor: grab;
+      touch-action: none;
+    }
+
+    #right-particle:active { cursor: grabbing; }
+
+    #right-particle:focus-visible {
+      outline: 3px solid #f59f00;
+      outline-offset: 5px;
+    }
+
+    .scale-note {
+      margin: 0;
+      padding: 0.45rem 1.4rem 0;
+      color: var(--muted);
+      font-size: 0.78rem;
+      text-align: center;
+    }
+
+    .readouts {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 1px;
+      margin: 1rem 1.4rem 1.4rem;
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      background: var(--line);
+    }
+
+    .readouts > div {
+      min-width: 0;
+      padding: 0.8rem 0.85rem;
+      background: #fbfdff;
+    }
+
+    .readouts dt {
+      margin-bottom: 0.18rem;
+      color: var(--muted);
+      font-size: 0.68rem;
+      font-weight: 800;
+      letter-spacing: 0.07em;
+      text-transform: uppercase;
+    }
+
+    .readouts dd {
+      margin: 0;
+      font-variant-numeric: tabular-nums;
+      font-weight: 750;
+      overflow-wrap: anywhere;
+    }
+
+    .controls-card { padding: 1.4rem; }
+
+    .controls-intro {
+      margin: 0.55rem 0 1.2rem;
+      color: var(--muted);
+      font-size: 0.9rem;
+    }
+
+    .control-grid {
+      display: grid;
+      gap: 0.9rem;
+    }
+
+    label {
+      display: grid;
+      gap: 0.35rem;
+      font-size: 0.82rem;
+      font-weight: 750;
+    }
+
+    select,
+    button {
+      min-height: 44px;
+      border-radius: 10px;
+      font: inherit;
+    }
+
+    select {
+      width: 100%;
+      padding: 0.55rem 2.2rem 0.55rem 0.7rem;
+      border: 1px solid #bcccdc;
+      color: var(--ink);
+      background: #fff;
+    }
+
+    select:hover { border-color: var(--blue); }
+
+    .field-help {
+      color: var(--muted);
+      font-size: 0.75rem;
+      font-weight: 500;
+    }
+
+    .button-row {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 0.65rem;
+      margin-top: 1.15rem;
+    }
+
+    button {
+      padding: 0.65rem 1.05rem;
+      border: 1px solid var(--blue);
+      color: #fff;
+      background: var(--blue);
+      cursor: pointer;
+      font-weight: 800;
+    }
+
+    button:hover { background: var(--blue-deep); }
+
+    button.secondary {
+      border-color: #bcccdc;
+      color: var(--ink);
+      background: #fff;
+    }
+
+    button.secondary:hover { border-color: var(--blue); background: var(--blue-pale); }
+
+    button:disabled,
+    select:disabled {
+      cursor: not-allowed;
+      opacity: 0.55;
+    }
+
+    .control-note {
+      margin: 0.85rem 0 0;
+      padding-top: 0.85rem;
+      border-top: 1px solid var(--line);
+      color: var(--muted);
+      font-size: 0.8rem;
+    }
+
+    .model-limits {
+      margin-top: 1rem;
+      padding: 0.8rem 0.85rem;
+      border-left: 3px solid var(--gold);
+      border-radius: 0 10px 10px 0;
+      background: #fffbeb;
+    }
+
+    .model-limits h3 {
+      margin: 0;
+      color: #704d00;
+      font-size: 0.72rem;
+      letter-spacing: 0.07em;
+      text-transform: uppercase;
+    }
+
+    .model-limits ul {
+      margin: 0.4rem 0 0;
+      padding-left: 1rem;
+      color: #5c4a1f;
+      font-size: 0.74rem;
+    }
+
+    .model-limits li { margin: 0.28rem 0; }
+
+    .explain-card {
+      grid-column: 1 / -1;
+      display: grid;
+      grid-template-columns: minmax(180px, 0.34fr) minmax(0, 1fr);
+      gap: 1.5rem;
+      padding: 1.5rem 1.6rem;
+      background: linear-gradient(120deg, #f8fcff, #fffaf5);
+    }
+
+    .explain-card p { margin: 0; color: #334e68; }
+    .explain-card .eyebrow { margin-bottom: 0.4rem; }
+
+    .chart-card {
+      grid-column: 1 / -1;
+      padding: 1.4rem;
+    }
+
+    .chart-heading {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 0.8rem;
+      margin-bottom: 0.8rem;
+    }
+
+    .chart-heading p {
+      max-width: 520px;
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.86rem;
+    }
+
+    #force-chart {
+      display: block;
+      width: 100%;
+      height: auto;
+      border-radius: 14px;
+      background: #fbfdff;
+    }
+
+    .chart-caption {
+      margin: 0.7rem 0 0;
+      color: var(--muted);
+      font-size: 0.78rem;
+    }
+
+    .technical {
+      margin-top: 2rem;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: rgba(255, 255, 255, 0.78);
+    }
+
+    .technical summary {
+      padding: 1.1rem 1.3rem;
+      cursor: pointer;
+      font-weight: 800;
+    }
+
+    .technical-body {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 1.3rem;
+      padding: 0 1.3rem 1.3rem;
+    }
+
+    .formula {
+      display: block;
+      margin: 0.5rem 0;
+      padding: 0.65rem 0.75rem;
+      overflow-x: auto;
+      border: 1px solid var(--line);
+      border-radius: 9px;
+      background: #f7fafc;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: 0.8rem;
+      white-space: nowrap;
+    }
+
+    .caveat-list {
+      margin: 0.55rem 0 0;
+      padding-left: 1.15rem;
+      color: #334e68;
+      font-size: 0.86rem;
+    }
+
+    .caveat-list li { margin: 0.45rem 0; }
+
+    footer {
+      padding: 2rem 0 3rem;
+      color: var(--muted);
+      font-size: 0.8rem;
+      text-align: center;
+    }
+
+    :focus-visible {
+      outline: 3px solid #f59f00;
+      outline-offset: 3px;
+    }
+
+    @media (max-width: 860px) {
+      .lab-grid { grid-template-columns: minmax(0, 1fr); }
+      .explain-card { grid-column: auto; grid-template-columns: 1fr; gap: 0.5rem; }
+      .chart-card { grid-column: auto; }
+      .technical-body { grid-template-columns: 1fr; }
+    }
+
+    @media (max-width: 560px) {
+      .page { width: min(100% - 1rem, 1120px); }
+      .concept-row { grid-template-columns: 1fr; }
+      .readouts { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .card-heading { padding-inline: 1rem; }
+      .readouts { margin-inline: 1rem; }
+      .controls-card { padding: 1.15rem; }
+      #force-chart text { font-size: 32px; }
+      #force-chart .tick-minor { display: none; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <a class="skip-link" href="#lab">Skip to interactive lab</a>
+
+  <header class="hero page">
+    <p class="eyebrow">Team 1 · Interactive forces lab</p>
+    <h1>Why do tiny protocells stick together?</h1>
+    <p class="lede">
+      Imagine two soft magnets floating on a shaking table. Attraction pulls them together,
+      a charged coat can push them apart, and water molecules constantly jostle them.
+      Move the pair, change the recipe, and watch which effect wins.
+    </p>
+  </header>
+
+  <main class="page" id="main">
+    <section class="concept-row" aria-label="Three competing effects">
+      <div class="concept pull">
+        <span class="concept-icon" aria-hidden="true">↔</span>
+        <span>Attraction pulls</span>
+      </div>
+      <div class="concept push">
+        <span class="concept-icon" aria-hidden="true">↤</span>
+        <span>Repulsion pushes</span>
+      </div>
+      <div class="concept shake">
+        <span class="concept-icon" aria-hidden="true">〰</span>
+        <span>Heat shakes</span>
+      </div>
+    </section>
+
+    <section class="lab-grid" id="lab" aria-label="Interactive protocell pair">
+      <article class="card scene-card" aria-labelledby="scene-heading">
+        <div class="card-heading">
+          <div>
+            <p class="card-kicker">Water · 298 K</p>
+            <h2 id="scene-heading">Two protocells, one surface gap</h2>
+          </div>
+        </div>
+
+        <div class="scene-wrap">
+          <svg id="scene" viewBox="0 0 760 330" role="group"
+               aria-labelledby="scene-title" aria-describedby="scene-desc">
+            <title id="scene-title">Two protocells separated by a surface gap in water</title>
+            <desc id="scene-desc">
+              Two blue circles represent protocells. The bracket between their facing surfaces is
+              the surface gap, not the distance between their centers. Arrows show the direction
+              of the current net force, and small squiggles represent random thermal kicks.
+              The drawing is not to scale.
+            </desc>
+            <defs>
+              <radialGradient id="cell-left" cx="35%" cy="28%" r="75%">
+                <stop offset="0%" stop-color="#6ec6e8"/>
+                <stop offset="58%" stop-color="#2586bd"/>
+                <stop offset="100%" stop-color="#0b4f6c"/>
+              </radialGradient>
+              <radialGradient id="cell-right" cx="35%" cy="28%" r="75%">
+                <stop offset="0%" stop-color="#7ed7c8"/>
+                <stop offset="58%" stop-color="#2f9e8f"/>
+                <stop offset="100%" stop-color="#0b5c56"/>
+              </radialGradient>
+              <marker id="arrow-head-coral" viewBox="0 0 10 10" refX="8" refY="5"
+                      markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                <path d="M 0 0 L 10 5 L 0 10 z" fill="#c2410c"/>
+              </marker>
+              <marker id="arrow-head-teal" viewBox="0 0 10 10" refX="8" refY="5"
+                      markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                <path d="M 0 0 L 10 5 L 0 10 z" fill="#0f766e"/>
+              </marker>
+              <filter id="cell-shadow" x="-30%" y="-30%" width="160%" height="170%">
+                <feDropShadow dx="0" dy="8" stdDeviation="9" flood-color="#102a43" flood-opacity="0.2"/>
+              </filter>
+            </defs>
+
+            <rect x="0" y="0" width="760" height="330" rx="18" fill="#eef9ff"/>
+            <g fill="none" stroke="#b8ddec" stroke-width="1.5" opacity="0.7" aria-hidden="true">
+              <circle cx="78" cy="62" r="7"/>
+              <circle cx="112" cy="246" r="5"/>
+              <circle cx="676" cy="84" r="8"/>
+              <circle cx="650" cy="256" r="5"/>
+              <circle cx="390" cy="34" r="4"/>
+              <path d="M58 166 q8 -8 16 0 t16 0"/>
+              <path d="M690 186 q8 -8 16 0 t16 0"/>
+            </g>
+
+            <g aria-hidden="true" stroke="#9a6700" stroke-width="2" stroke-linecap="round" opacity="0.85">
+              <path d="M166 104 q-10 -17 2 -30"/>
+              <path d="M188 118 q-15 -8 -18 -23"/>
+              <path d="M574 100 q10 -17 -2 -30"/>
+              <path d="M596 116 q15 -8 18 -23"/>
+              <path d="M151 212 q-14 6 -18 20"/>
+              <path d="M607 214 q14 6 18 20"/>
+            </g>
+
+            <g id="force-arrows" aria-hidden="true" stroke-width="4" stroke-linecap="round">
+              <line id="arrow-left" x1="208" y1="62" x2="276" y2="62"
+                    stroke="#c2410c" marker-end="url(#arrow-head-coral)"/>
+              <line id="arrow-right" x1="552" y1="62" x2="484" y2="62"
+                    stroke="#c2410c" marker-end="url(#arrow-head-coral)"/>
+            </g>
+            <text id="force-arrow-label" x="380" y="52" text-anchor="middle"
+                  fill="#8a350b" font-size="14" font-weight="750">Attraction pulls them together</text>
+
+            <g aria-hidden="true">
+              <circle cx="250" cy="170" r="62" fill="url(#cell-left)"
+                      stroke="#08405a" stroke-width="2" filter="url(#cell-shadow)"/>
+              <text x="250" y="177" text-anchor="middle" fill="#fff" font-size="25" font-weight="800">A</text>
+            </g>
+
+            <g id="right-particle" role="slider" tabindex="0"
+               aria-label="Surface gap between the two protocells. Drag or use arrow keys."
+               aria-valuemin="0.5" aria-valuemax="200" aria-valuenow="20"
+               aria-valuetext="20.0 nanometre surface gap">
+              <rect id="slider-hit-target" x="452" y="94" width="136" height="152"
+                    rx="68" fill="transparent" aria-hidden="true"/>
+              <circle cx="520" cy="170" r="62" fill="url(#cell-right)"
+                      stroke="#084c48" stroke-width="2" filter="url(#cell-shadow)"/>
+              <text x="520" y="177" text-anchor="middle" fill="#fff" font-size="25" font-weight="800">B</text>
+            </g>
+
+            <g aria-hidden="true">
+              <line id="gap-tick-left" x1="312" y1="256" x2="312" y2="270"
+                    stroke="#52667a" stroke-width="1.5"/>
+              <line id="gap-tick-right" x1="458" y1="256" x2="458" y2="270"
+                    stroke="#52667a" stroke-width="1.5"/>
+              <line id="gap-bracket" x1="312" y1="268" x2="458" y2="268"
+                    stroke="#334e68" stroke-width="2" marker-start="url(#arrow-head-coral)"
+                    marker-end="url(#arrow-head-coral)"/>
+              <text id="gap-bracket-label" x="385" y="292" text-anchor="middle"
+                    fill="#334e68" font-size="14" font-weight="750">L = 20.0 nm surface gap</text>
+            </g>
+
+            <text x="380" y="319" text-anchor="middle" fill="#52667a" font-size="11">
+              Drawing not to scale. Drag protocell B, or focus it and use the arrow keys.
+            </text>
+          </svg>
+        </div>
+
+        <p class="scale-note">
+          The gap is the water between the surfaces — not the center-to-center distance.
+          Drag protocell B, or focus it and use the arrow keys, to change the gap.
+          Particle sizes are fixed on screen, so this drawing is not to scale.
+        </p>
+
+        <dl class="readouts" aria-label="Current pair state">
+          <div>
+            <dt>Surface gap</dt>
+            <dd id="gap-readout">20.0 nm</dd>
+          </div>
+          <div>
+            <dt>Net force</dt>
+            <dd id="force-readout">0.52 pN pull</dd>
+          </div>
+          <div>
+            <dt>Distance zone</dt>
+            <dd id="zone-readout">Meso gap</dd>
+          </div>
+          <div>
+            <dt>Simulated time</dt>
+            <dd id="time-readout">0.00 ms</dd>
+          </div>
+        </dl>
+      </article>
+
+      <aside class="card controls-card" aria-labelledby="controls-heading">
+        <p class="card-kicker">Change the recipe</p>
+        <h2 id="controls-heading">What should be in the water?</h2>
+        <p class="controls-intro">
+          These are the only knobs you need. Each one changes a different physical ingredient.
+        </p>
+
+        <div class="control-grid">
+          <label for="model">
+            Force recipe
+            <select id="model">
+              <option value="dlvo" selected>DLVO — attraction + charged coat + bumper</option>
+              <option value="vdw">van der Waals only — attraction</option>
+              <option value="cl_retarded">Retarded CL — attraction that fades</option>
+            </select>
+          </label>
+
+          <label for="material">
+            Material
+            <select id="material">
+              <option value="pmbc" selected>PMBC — ten times stickier</option>
+              <option value="fatty_acid">Fatty acid — weaker attraction</option>
+            </select>
+            <span class="field-help">Changes the Hamaker constant and therefore vdW attraction.</span>
+          </label>
+
+          <label for="salt">
+            Salt concentration
+            <select id="salt">
+              <option value="50">50 mM — wider electrostatic reach</option>
+              <option value="100" selected>100 mM — medium</option>
+              <option value="200">200 mM — shortest reach</option>
+            </select>
+            <span class="field-help">Only DLVO has electrostatics, so salt is disabled in the other recipes.</span>
+          </label>
+
+          <label for="noise">
+            Thermal motion
+            <select id="noise">
+              <option value="low">Low — gentle jostling</option>
+              <option value="normal" selected>Normal — standard demo setting</option>
+              <option value="high">High — stronger random kicks</option>
+            </select>
+            <span class="field-help">
+              D = 10⁻¹⁷ / 10⁻¹⁶ / 10⁻¹⁵ m²/s. These are didactic demonstration settings,
+              not a fitted experimental noise scale.
+            </span>
+          </label>
+        </div>
+
+        <div class="model-limits" role="note" aria-label="Important model limits">
+          <h3>Keep these limits in view</h3>
+          <ul>
+            <li>vdW and retarded CL are alternative descriptions — compared, never added.</li>
+            <li>CL’s fading factor is an educational approximation, not a full Lifshitz calculation.</li>
+            <li>vdW and CL have no core repulsion; the full 2D runs can produce deep overlap.</li>
+            <li>This is a two-particle illustration, not evidence of spontaneous cluster formation.</li>
+          </ul>
+        </div>
+
+        <div class="button-row">
+          <button id="play" type="button">Play</button>
+          <button id="reset" class="secondary" type="button">Reset</button>
+        </div>
+        <p class="control-note" id="control-explanation">
+          Nothing moves until you press Play. Reset returns the pair to 20 nm and the defaults.
+        </p>
+      </aside>
+
+      <article class="card chart-card" aria-labelledby="chart-heading">
+        <div class="chart-heading">
+          <div>
+            <p class="card-kicker">Force versus distance</p>
+            <h2 id="chart-heading">How hard at this distance?</h2>
+          </div>
+          <p>Higher on the chart pushes apart. Lower on the chart pulls together.</p>
+        </div>
+
+        <svg id="force-chart" viewBox="0 0 760 400" role="img" aria-labelledby="chart-title chart-desc">
+          <title id="chart-title">Net force between two protocells versus surface gap</title>
+          <desc id="chart-desc">
+            A signed curve for the selected force recipe. The upper half is repulsion and the lower half is
+            attraction. Gap increases to the right on a logarithmic scale. The vertical force scale is
+            compressed so both weak and very strong forces remain visible.
+          </desc>
+
+          <rect x="54" y="28" width="682" height="148" fill="#f0fdfa"/>
+          <rect x="54" y="176" width="682" height="146" fill="#fff7ed"/>
+          <line x1="54" y1="176" x2="736" y2="176" stroke="#829ab1" stroke-width="1.5"/>
+          <text x="66" y="51" fill="#0f766e" font-size="12" font-weight="800">REPULSION ↑</text>
+          <text x="66" y="205" fill="#c2410c" font-size="12" font-weight="800">ATTRACTION ↓</text>
+          <text x="736" y="170" text-anchor="end" fill="#52667a" font-size="11">0</text>
+
+          <g fill="#52667a" font-size="11" text-anchor="middle">
+            <line x1="56" y1="322" x2="56" y2="328" stroke="#829ab1"/>
+            <text x="56" y="345">0.5</text>
+            <line x1="144" y1="322" x2="144" y2="328" stroke="#829ab1"/>
+            <text x="144" y="345">1</text>
+            <line x1="232" y1="322" x2="232" y2="328" stroke="#829ab1"/>
+            <text class="tick-minor" x="232" y="345">2</text>
+            <line x1="351" y1="322" x2="351" y2="328" stroke="#829ab1"/>
+            <text class="tick-minor" x="351" y="345">5</text>
+            <line x1="440" y1="322" x2="440" y2="328" stroke="#829ab1"/>
+            <text x="440" y="345">10</text>
+            <line x1="528" y1="322" x2="528" y2="328" stroke="#829ab1"/>
+            <text class="tick-minor" x="528" y="345">20</text>
+            <line x1="584" y1="322" x2="584" y2="328" stroke="#829ab1"/>
+            <text class="tick-minor" x="584" y="345">30</text>
+            <line x1="736" y1="322" x2="736" y2="328" stroke="#829ab1"/>
+            <text x="736" y="345">100</text>
+          </g>
+          <text x="395" y="392" text-anchor="middle" fill="#52667a" font-size="11">Surface gap L (nm) — logarithmic</text>
+          <text id="chart-offscale" x="736" y="48" text-anchor="end" fill="#52667a"
+                font-size="11" font-weight="750" style="visibility: hidden">Current gap is off this chart (&gt;100 nm)</text>
+
+          <path id="force-curve" fill="none" stroke="#1769aa" stroke-width="3.2"
+                stroke-linecap="round" stroke-linejoin="round"/>
+          <circle id="force-marker" cx="528" cy="176" r="6.5" fill="#fff"
+                  stroke="#102a43" stroke-width="3"/>
+        </svg>
+
+        <p class="chart-caption">
+          The gap axis is logarithmic. The force axis is symmetric-log and rescaled for the selected
+          recipe: equal visual distances do not mean equal force changes. The marker shows the current
+          gap; above 100 nm it is hidden and labelled off chart. The vertical scale changes with each
+          recipe, so compare readouts and arrows rather than curve heights.
+        </p>
+      </article>
+
+      <article class="card explain-card" aria-labelledby="explain-heading">
+        <div>
+          <p class="eyebrow">What am I seeing?</p>
+          <h2 id="explain-heading">Attraction currently wins.</h2>
+        </div>
+        <p id="model-explanation">
+          DLVO combines three effects: a sticky van der Waals attraction, a charged electrostatic
+          coat that pushes other protocells away, and a very short-range core bumper. At 20 nm the
+          coat is almost gone and the attraction wins, so the pair tends to move closer. Random
+          thermal kicks still make the motion jagged.
+        </p>
+      </article>
+    </section>
+
+    <details class="technical">
+      <summary>Show the equations and model limits</summary>
+      <div class="technical-body">
+        <section>
+          <h3>Signed forces used by the demo</h3>
+          <span class="formula">F_vdW = −A_H · R_eff / (6 L²)</span>
+          <span class="formula">F_el = (B / λ_D) · exp(−L / λ_D)</span>
+          <span class="formula">F_core = 12 C · L_core¹² / L¹³</span>
+          <span class="formula">r(L) = 1 / (1 + L / L_ret)²</span>
+          <span class="formula">F_CL,ret = F_vdW · r(L)</span>
+          <span class="formula">L_next = L + μ F Δt + √(2DΔt) · ξ</span>
+          <p class="field-help">
+            Negative force attracts; positive force repels. SI units are used internally, with forces
+            shown in pN. R = 500 nm, R_eff = R/2, A_H = 0.5 or 5 × 10⁻²¹ J, B = 20 k_BT,
+            C = 0.5 k_BT, L_core = 0.5 nm, L_ret = 20 nm, Δt = 10⁻⁷ s, μ = 10⁸ m/(N s),
+            and pair forces are capped at ±20 pN.
+          </p>
+        </section>
+
+        <section>
+          <h3>What this page does not claim</h3>
+          <ul class="caveat-list">
+            <li>
+              <strong>CL replaces vdW; CL and vdW are compared, never added.</strong>
+              They describe the same fluctuation-induced attraction at different levels of approximation.
+            </li>
+            <li>
+              Retardation here is a simplified educational attenuation factor, not a full Lifshitz
+              or Matsubara calculation. It only weakens near-field attraction.
+            </li>
+            <li>
+              In the full 2D model, vdW and CL have no core repulsion and can produce deep overlap.
+              This pair view clamps the gap to 0.5–200 nm instead; that clamp is not a core force.
+            </li>
+            <li>
+              This pair-dynamics demonstration is not evidence of spontaneous cluster formation.
+              The exported many-particle simulations start from preclustered lattices.
+            </li>
+            <li>
+              More salt shortens DLVO’s electrostatic reach; it does not switch off vdW or CL attraction.
+              A stronger thermal setting means larger random kicks, not a guaranteed outcome.
+            </li>
+          </ul>
+        </section>
+      </div>
+    </details>
+
+    <footer>
+      A learner-facing companion to <a href="README.md">Team 1’s force model</a>.
+      Educational pair model — see the technical limits above before interpreting it as an experiment.
+    </footer>
+  </main>
+
+  <script>
+    (() => {
+      "use strict";
+
+      const KB = 1.380649e-23;
+      const T = 298.15;
+      const KBT = KB * T;
+      const R = 500e-9;
+      const R_EFF = R / 2;
+      const L_MIN = 0.2e-9;
+      const L_CORE = 0.5e-9;
+      const C_CORE = 0.5 * KBT;
+      const B = 20 * KBT;
+      const L_RET = 20e-9;
+      const P_RET = 2;
+      const PN = 1e-12;
+      const DT = 1e-7;
+      const MOBILITY = 1e8;
+      const FORCE_CAP_PN = 20;
+      const GAP_MIN_NM = 0.5;
+      const GAP_MAX_NM = 200;
+      const HAMAKER = {
+        fatty_acid: 0.5e-21,
+        pmbc: 5e-21,
+      };
+      const DEBYE_NM = {
+        50: 1.36,
+        100: 0.96,
+        200: 0.68,
+      };
+      const DIFFUSION = {
+        low: 1e-17,
+        normal: 1e-16,
+        high: 1e-15,
+      };
+      const CHART = {
+        left: 56,
+        right: 736,
+        top: 32,
+        zero: 176,
+        bottom: 318,
+        minGap: 0.5,
+        maxGap: 100,
+        samples: 240,
+        thresholdPn: 0.01,
+      };
+      const DEFAULT_STATE = Object.freeze({
+        model: "dlvo",
+        material: "pmbc",
+        saltMm: 100,
+        noise: "normal",
+        gapNm: 20,
+      });
+      const STEPS_PER_DISPLAY_SECOND = 2000;
+      const MAX_STEPS_PER_FRAME = 200;
+      const RENDER = {
+        leftCenter: 250,
+        particleRadius: 62,
+        arrowY: 62,
+        gapPxMin: 14,
+        gapPxMax: 250,
+      };
+      const ZONE_LABELS = {
+        hard_contact: "Hard contact (<2 nm)",
+        dlvo_zone: "DLVO range (2–5 nm)",
+        near_gap: "Near gap (5–10 nm)",
+        meso_gap: "Meso gap (10–30 nm)",
+        far_gap: "Far gap (30–100 nm)",
+        separated: "Separated (≥100 nm)",
+      };
+
+      const clippedGap = (gapNm) => Math.max(gapNm * 1e-9, L_MIN);
+
+      function vdwForcePinned(gapNm, material) {
+        const gap = clippedGap(gapNm);
+        return (-HAMAKER[material] * R_EFF / (6 * gap ** 2)) / PN;
+      }
+
+      function electrostaticForcePinned(gapNm, saltMm) {
+        const gap = clippedGap(gapNm);
+        const lambda = DEBYE_NM[saltMm] * 1e-9;
+        const potential = B * Math.exp(-gap / lambda);
+        return (potential / lambda) / PN;
+      }
+
+      function coreForcePinned(gapNm) {
+        const gap = clippedGap(gapNm);
+        return (12 * C_CORE * L_CORE ** 12 / gap ** 13) / PN;
+      }
+
+      function retardationFactor(gapNm) {
+        const gap = clippedGap(gapNm);
+        return 1 / (1 + gap / L_RET) ** P_RET;
+      }
+
+      function forceAtGap(gapNm, settings) {
+        const vdW = vdwForcePinned(gapNm, settings.material);
+        let electrostatic = 0;
+        let core = 0;
+        let total = vdW;
+
+        if (settings.model === "dlvo") {
+          electrostatic = electrostaticForcePinned(gapNm, settings.saltMm);
+          core = coreForcePinned(gapNm);
+          total = electrostatic + vdW + core;
+        } else if (settings.model === "cl_retarded") {
+          total = vdW * retardationFactor(gapNm);
+        }
+
+        return { vdW, electrostatic, core, total };
+      }
+
+      function advanceGap(gapNm, settings, normalSample) {
+        const force = forceAtGap(gapNm, settings);
+        const cappedForcePn = Math.max(-FORCE_CAP_PN, Math.min(FORCE_CAP_PN, force.total));
+        const drift = MOBILITY * cappedForcePn * PN * DT * 1e9;
+        const noise = Math.sqrt(2 * DIFFUSION[settings.noise] * DT) * normalSample * 1e9;
+        const next = gapNm + drift + noise;
+        return Math.min(GAP_MAX_NM, Math.max(GAP_MIN_NM, next));
+      }
+
+      function contactZone(gapNm) {
+        if (gapNm < 2) return "hard_contact";
+        if (gapNm < 5) return "dlvo_zone";
+        if (gapNm < 10) return "near_gap";
+        if (gapNm < 30) return "meso_gap";
+        if (gapNm < 100) return "far_gap";
+        return "separated";
+      }
+
+      function chartX(gapNm) {
+        const clamped = Math.min(CHART.maxGap, Math.max(CHART.minGap, gapNm));
+        const fraction = Math.log(clamped / CHART.minGap) / Math.log(CHART.maxGap / CHART.minGap);
+        return CHART.left + fraction * (CHART.right - CHART.left);
+      }
+
+      const symlog = (forcePn) => Math.sign(forcePn) *
+        Math.log10(1 + Math.abs(forcePn) / CHART.thresholdPn);
+
+      function forceCurveGeometry(settings) {
+        const points = [];
+        let maxLog = 0;
+        for (let i = 0; i < CHART.samples; i += 1) {
+          const fraction = i / (CHART.samples - 1);
+          const gap = CHART.minGap * (CHART.maxGap / CHART.minGap) ** fraction;
+          const force = forceAtGap(gap, settings).total;
+          const logForce = symlog(force);
+          maxLog = Math.max(maxLog, Math.abs(logForce));
+          points.push({ gap, force, logForce });
+        }
+        const span = Math.max(1, maxLog);
+        const halfHeight = Math.min(CHART.zero - CHART.top, CHART.bottom - CHART.zero) - 14;
+        return points.map((point, index) => ({
+          ...point,
+          x: CHART.left + (index / (CHART.samples - 1)) * (CHART.right - CHART.left),
+          y: CHART.zero - (point.logForce / span) * halfHeight,
+        }));
+      }
+
+      function forceCurvePath(settings) {
+        const points = forceCurveGeometry(settings);
+        return points.map((point, index) =>
+          `${index === 0 ? "M" : "L"} ${point.x.toFixed(2)} ${point.y.toFixed(2)}`,
+        ).join(" ");
+      }
+
+      function initPage() {
+        const ui = {
+          model: document.getElementById("model"),
+          material: document.getElementById("material"),
+          salt: document.getElementById("salt"),
+          noise: document.getElementById("noise"),
+          play: document.getElementById("play"),
+          reset: document.getElementById("reset"),
+          scene: document.getElementById("scene"),
+          rightParticle: document.getElementById("right-particle"),
+          gapReadout: document.getElementById("gap-readout"),
+          forceReadout: document.getElementById("force-readout"),
+          timeReadout: document.getElementById("time-readout"),
+          zoneReadout: document.getElementById("zone-readout"),
+          modelExplanation: document.getElementById("model-explanation"),
+          controlExplanation: document.getElementById("control-explanation"),
+          explainHeading: document.getElementById("explain-heading"),
+          forceCurve: document.getElementById("force-curve"),
+          forceMarker: document.getElementById("force-marker"),
+          chartOffscale: document.getElementById("chart-offscale"),
+          gapTickLeft: document.getElementById("gap-tick-left"),
+          gapTickRight: document.getElementById("gap-tick-right"),
+          arrowLeft: document.getElementById("arrow-left"),
+          arrowRight: document.getElementById("arrow-right"),
+          arrowLabel: document.getElementById("force-arrow-label"),
+          gapBracket: document.getElementById("gap-bracket"),
+          gapBracketLabel: document.getElementById("gap-bracket-label"),
+        };
+
+        const state = {
+          model: DEFAULT_STATE.model,
+          material: DEFAULT_STATE.material,
+          saltMm: DEFAULT_STATE.saltMm,
+          noise: DEFAULT_STATE.noise,
+          gapNm: DEFAULT_STATE.gapNm,
+          running: false,
+          simulatedSeconds: 0,
+        };
+
+        let frameId = null;
+        let lastTimestamp = null;
+        let accumulator = 0;
+        let dragging = false;
+        let dragStartX = 0;
+        let dragStartGapPx = 0;
+
+        const settings = () => ({
+          model: state.model,
+          material: state.material,
+          saltMm: state.saltMm,
+          noise: state.noise,
+        });
+
+        const clampGap = (gapNm) => Math.min(GAP_MAX_NM, Math.max(GAP_MIN_NM, gapNm));
+
+        function visualGapForGap(gapNm) {
+          const fraction = Math.log(clampGap(gapNm) / GAP_MIN_NM) /
+            Math.log(GAP_MAX_NM / GAP_MIN_NM);
+          return RENDER.gapPxMin + fraction * (RENDER.gapPxMax - RENDER.gapPxMin);
+        }
+
+        function gapFromVisualGap(visualGapPx) {
+          const fraction = (visualGapPx - RENDER.gapPxMin) /
+            (RENDER.gapPxMax - RENDER.gapPxMin);
+          const clampedFraction = Math.min(1, Math.max(0, fraction));
+          return GAP_MIN_NM * (GAP_MAX_NM / GAP_MIN_NM) ** clampedFraction;
+        }
+
+        function normalSample() {
+          let u = 0;
+          while (u === 0) u = Math.random();
+          const v = Math.random();
+          return Math.sqrt(-2 * Math.log(u)) * Math.cos(2 * Math.PI * v);
+        }
+
+        function setArrow(line, x1, x2, color, marker) {
+          line.setAttribute("x1", x1.toFixed(2));
+          line.setAttribute("x2", x2.toFixed(2));
+          line.setAttribute("y1", String(RENDER.arrowY));
+          line.setAttribute("y2", String(RENDER.arrowY));
+          line.setAttribute("stroke", color);
+          line.setAttribute("marker-end", `url(#${marker})`);
+        }
+
+        function renderArrows(forcePn, rightCenter) {
+          const magnitude = Math.abs(forcePn);
+          const veryWeak = magnitude < CHART.thresholdPn;
+          const attraction = forcePn < 0;
+          const length = 30 + Math.min(34, Math.log10(1 + magnitude) * 10);
+          const leftStart = RENDER.leftCenter - 42;
+          const rightStart = rightCenter + 42;
+
+          ui.arrowLeft.setAttribute("opacity", veryWeak ? "0.25" : "1");
+          ui.arrowRight.setAttribute("opacity", veryWeak ? "0.25" : "1");
+          ui.arrowLabel.setAttribute("opacity", veryWeak ? "0.7" : "1");
+
+          if (veryWeak) {
+            setArrow(ui.arrowLeft, leftStart, leftStart + 24, "#829ab1", "arrow-head-teal");
+            setArrow(ui.arrowRight, rightStart, rightStart - 24, "#829ab1", "arrow-head-teal");
+            ui.arrowLabel.textContent = "Nearly balanced — very weak net force";
+            ui.arrowLabel.setAttribute("fill", "#52667a");
+            return;
+          }
+
+          if (attraction) {
+            setArrow(ui.arrowLeft, leftStart, leftStart + length, "#c2410c", "arrow-head-coral");
+            setArrow(ui.arrowRight, rightStart, rightStart - length, "#c2410c", "arrow-head-coral");
+            ui.arrowLabel.setAttribute("fill", "#8a350b");
+            ui.arrowLabel.textContent = magnitude > FORCE_CAP_PN
+              ? "Attraction — motion capped at 20 pN"
+              : "Attraction pulls them together";
+          } else {
+            setArrow(ui.arrowLeft, RENDER.leftCenter + 42, RENDER.leftCenter + 42 - length,
+              "#0f766e", "arrow-head-teal");
+            setArrow(ui.arrowRight, rightCenter - 42, rightCenter - 42 + length,
+              "#0f766e", "arrow-head-teal");
+            ui.arrowLabel.setAttribute("fill", "#0f5c57");
+            ui.arrowLabel.textContent = magnitude > FORCE_CAP_PN
+              ? "Repulsion — motion capped at 20 pN"
+              : "Repulsion pushes them apart";
+          }
+        }
+
+        function renderScene(forcePn) {
+          const leftSurface = RENDER.leftCenter + RENDER.particleRadius;
+          const visualGap = visualGapForGap(state.gapNm);
+          const rightCenter = leftSurface + visualGap + RENDER.particleRadius;
+
+          ui.rightParticle.setAttribute("transform", `translate(${(rightCenter - 520).toFixed(2)} 0)`);
+          ui.rightParticle.setAttribute("aria-valuenow", state.gapNm.toFixed(1));
+          ui.rightParticle.setAttribute("aria-valuetext",
+            `${state.gapNm.toFixed(1)} nanometre surface gap`);
+
+          const rightSurface = leftSurface + visualGap;
+          ui.gapBracket.setAttribute("x1", leftSurface.toFixed(2));
+          ui.gapBracket.setAttribute("x2", rightSurface.toFixed(2));
+          ui.gapTickLeft.setAttribute("x1", leftSurface.toFixed(2));
+          ui.gapTickLeft.setAttribute("x2", leftSurface.toFixed(2));
+          ui.gapTickRight.setAttribute("x1", rightSurface.toFixed(2));
+          ui.gapTickRight.setAttribute("x2", rightSurface.toFixed(2));
+          ui.gapBracketLabel.setAttribute("x", (leftSurface + visualGap / 2).toFixed(2));
+          ui.gapBracketLabel.textContent = `L = ${state.gapNm.toFixed(1)} nm surface gap`;
+
+          renderArrows(forcePn, rightCenter);
+        }
+
+        function renderChart(forcePn) {
+          const currentSettings = settings();
+          const points = forceCurveGeometry(currentSettings);
+          const path = points.map((point, index) =>
+            `${index === 0 ? "M" : "L"} ${point.x.toFixed(2)} ${point.y.toFixed(2)}`,
+          ).join(" ");
+          ui.forceCurve.setAttribute("d", path);
+
+          const maxLog = Math.max(1, ...points.map((point) => Math.abs(point.logForce)));
+          const halfHeight = Math.min(CHART.zero - CHART.top, CHART.bottom - CHART.zero) - 14;
+          const markerY = CHART.zero - (symlog(forcePn) / maxLog) * halfHeight;
+          const inChart = state.gapNm <= CHART.maxGap;
+          ui.forceMarker.setAttribute("cx", chartX(state.gapNm).toFixed(2));
+          ui.forceMarker.setAttribute("cy", markerY.toFixed(2));
+          ui.forceMarker.style.display = inChart ? "" : "none";
+          ui.chartOffscale.style.visibility = inChart ? "hidden" : "visible";
+        }
+
+        function updateExplanation(forcePn) {
+          const magnitude = Math.abs(forcePn);
+          const veryWeak = magnitude < CHART.thresholdPn;
+          const attraction = forcePn < 0;
+          const gap = state.gapNm.toFixed(1);
+          const noise = state.noise;
+          const intros = {
+            dlvo: "DLVO combines a sticky van der Waals attraction, a salt-dependent electrostatic push, and a very short-range core bumper.",
+            vdw: "Van der Waals only contains the near-field attraction. This recipe has no electrostatic term, no salt effect, and no core bumper.",
+            cl_retarded: "Retarded CL takes the van der Waals attraction and multiplies it by a factor that fades with distance. CL replaces vdW; it is not added on top.",
+          };
+
+          if (veryWeak) {
+            ui.explainHeading.textContent = "The forces are nearly balanced.";
+            ui.modelExplanation.textContent =
+              `${intros[state.model]} At ${gap} nm the net force is below 0.01 pN on this display scale, so thermal motion dominates the visible jitter.`;
+            return;
+          }
+
+          const outcome = attraction
+            ? `At ${gap} nm attraction currently wins, so the gap tends to shrink.`
+            : `At ${gap} nm repulsion currently wins, so the gap tends to grow.`;
+          ui.explainHeading.textContent = attraction
+            ? "Attraction currently wins."
+            : "Repulsion currently wins.";
+          ui.modelExplanation.textContent =
+            `${intros[state.model]} ${outcome} Thermal motion is set to ${noise}, so random kicks still make the path jagged.`;
+        }
+
+        function syncControls() {
+          ui.model.value = state.model;
+          ui.material.value = state.material;
+          ui.salt.value = String(state.saltMm);
+          ui.noise.value = state.noise;
+          ui.salt.disabled = state.model !== "dlvo";
+          ui.controlExplanation.textContent = state.model === "dlvo"
+            ? "Salt changes how far DLVO’s electrostatic push reaches. Changing a recipe pauses the run so both states share the same gap."
+            : "Salt only changes the electrostatic part of DLVO; this model has no electrostatic term.";
+        }
+
+        function render() {
+          const currentSettings = settings();
+          const force = forceAtGap(state.gapNm, currentSettings);
+          const magnitude = Math.abs(force.total);
+          const veryWeak = magnitude < CHART.thresholdPn;
+
+          ui.gapReadout.textContent = `${state.gapNm.toFixed(1)} nm`;
+          if (veryWeak) {
+            ui.forceReadout.textContent = "≈ 0 pN (very weak)";
+          } else {
+            const shown = magnitude < 10 ? magnitude.toFixed(2) : magnitude.toFixed(1);
+            ui.forceReadout.textContent = `${shown} pN ${force.total < 0 ? "pull" : "push"}`;
+          }
+          ui.zoneReadout.textContent = ZONE_LABELS[contactZone(state.gapNm)];
+          ui.timeReadout.textContent = `${(state.simulatedSeconds * 1000).toFixed(3)} ms`;
+
+          renderScene(force.total);
+          renderChart(force.total);
+          updateExplanation(force.total);
+        }
+
+        function pause() {
+          state.running = false;
+          if (frameId !== null) cancelAnimationFrame(frameId);
+          frameId = null;
+          lastTimestamp = null;
+          accumulator = 0;
+          ui.play.textContent = "Play";
+        }
+
+        function animate(timestamp) {
+          if (!state.running) return;
+
+          if (lastTimestamp === null) {
+            lastTimestamp = timestamp;
+            frameId = requestAnimationFrame(animate);
+            return;
+          }
+
+          const elapsedRaw = timestamp - lastTimestamp;
+          const elapsed = Math.min(100, Math.max(0, elapsedRaw));
+          lastTimestamp = timestamp;
+          accumulator += (elapsed / 1000) * STEPS_PER_DISPLAY_SECOND;
+          const steps = Math.min(MAX_STEPS_PER_FRAME, Math.floor(accumulator));
+          accumulator -= steps;
+
+          if (steps > 0) {
+            const currentSettings = settings();
+            for (let step = 0; step < steps; step += 1) {
+              state.gapNm = advanceGap(state.gapNm, currentSettings, normalSample());
+              state.simulatedSeconds += DT;
+            }
+            render();
+          }
+
+          frameId = requestAnimationFrame(animate);
+        }
+
+        function play() {
+          if (state.running) {
+            pause();
+            return;
+          }
+          state.running = true;
+          ui.play.textContent = "Pause";
+          lastTimestamp = null;
+          accumulator = 0;
+          frameId = requestAnimationFrame(animate);
+        }
+
+        function reset() {
+          pause();
+          state.model = DEFAULT_STATE.model;
+          state.material = DEFAULT_STATE.material;
+          state.saltMm = DEFAULT_STATE.saltMm;
+          state.noise = DEFAULT_STATE.noise;
+          state.gapNm = DEFAULT_STATE.gapNm;
+          state.simulatedSeconds = 0;
+          syncControls();
+          render();
+        }
+
+        ui.play.addEventListener("click", play);
+        ui.reset.addEventListener("click", reset);
+
+        for (const control of [ui.model, ui.material, ui.salt, ui.noise]) {
+          control.addEventListener("change", () => {
+            pause();
+            state.model = ui.model.value;
+            state.material = ui.material.value;
+            state.saltMm = Number(ui.salt.value);
+            state.noise = ui.noise.value;
+            syncControls();
+            render();
+          });
+        }
+
+        function scenePoint(event) {
+          const point = ui.scene.createSVGPoint();
+          point.x = event.clientX;
+          point.y = event.clientY;
+          return point.matrixTransform(ui.scene.getScreenCTM().inverse());
+        }
+
+        ui.rightParticle.addEventListener("pointerdown", (event) => {
+          if (event.button > 0) return;
+          pause();
+          dragging = true;
+          dragStartX = scenePoint(event).x;
+          dragStartGapPx = visualGapForGap(state.gapNm);
+          ui.rightParticle.setPointerCapture(event.pointerId);
+          event.preventDefault();
+        });
+
+        ui.rightParticle.addEventListener("pointermove", (event) => {
+          if (!dragging) return;
+          const delta = scenePoint(event).x - dragStartX;
+          state.gapNm = gapFromVisualGap(dragStartGapPx + delta);
+          render();
+          event.preventDefault();
+        });
+
+        function endDrag(event) {
+          if (!dragging) return;
+          dragging = false;
+          if (ui.rightParticle.hasPointerCapture(event.pointerId)) {
+            ui.rightParticle.releasePointerCapture(event.pointerId);
+          }
+          render();
+        }
+
+        ui.rightParticle.addEventListener("pointerup", endDrag);
+        ui.rightParticle.addEventListener("pointercancel", endDrag);
+
+        ui.rightParticle.addEventListener("keydown", (event) => {
+          const direction = {
+            ArrowRight: 1,
+            ArrowUp: 1,
+            ArrowLeft: -1,
+            ArrowDown: -1,
+          }[event.key];
+          if (direction === undefined && event.key !== "Home" && event.key !== "End") return;
+
+          pause();
+          if (event.key === "Home") {
+            state.gapNm = GAP_MIN_NM;
+          } else if (event.key === "End") {
+            state.gapNm = GAP_MAX_NM;
+          } else {
+            const stepNm = event.shiftKey ? 10 : 1;
+            state.gapNm = clampGap(state.gapNm + direction * stepNm);
+          }
+          render();
+          event.preventDefault();
+        });
+
+        document.addEventListener("visibilitychange", () => {
+          if (document.hidden) pause();
+        });
+
+        syncControls();
+        render();
+      }
+
+      globalThis.Team1Physics = Object.freeze({
+        retardationFactor,
+        forceAtGap,
+        advanceGap,
+        contactZone,
+        forceCurvePath,
+      });
+
+      if (typeof document !== "undefined") {
+        initPage();
+      }
+    })();
+  </script>
+</body>
+</html>
