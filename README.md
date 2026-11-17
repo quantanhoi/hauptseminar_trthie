@@ -38,6 +38,8 @@ A useful analogy is a pair of magnets on a shaking table. Attraction is the magn
 
 Dissolved ions rearrange around charged surfaces and screen their electrostatic interaction. More salt means a shorter **Debye length**, so the electrostatic repulsion fades over a shorter distance. This does **not** mean that salt simply switches off every electromagnetic fluctuation contribution.
 
+the salt shield works in the opposite direction: it eliminates electrostatic repulsion beyond **$2\text{ nm}$**, allowing Casimir–Lifshitz attraction to pull the protocells together^^. Once they get closer than **$2\text{ nm}$**, physical core repulsion (hard-contact bumpers) prevents them from fusing.
+
 ### Retardation means attraction weakens with distance
 
 The simplest van der Waals formula is a near-field approximation. At larger separations, the finite speed of electromagnetic propagation and the frequency-dependent material response matter. The project represents this **retardation** with a factor that is one at zero gap and decreases as the gap grows. It weakens attraction; it never amplifies it.
@@ -226,8 +228,6 @@ Other values remain `unknown` in Team 2 rather than receiving guessed material l
 ### 7. Brownian dynamics: deterministic drift plus random motion
 
 > **ELI5**
-
-	
 
 ma step is
 
