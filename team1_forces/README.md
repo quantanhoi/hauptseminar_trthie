@@ -16,16 +16,20 @@ python3.12 -m venv .venv
 
 ## Interactive physics demo
 
-[Open the interactive physics page](interactive.html) directly in a modern
-browser — no installation or server is needed. It shows one pair of protocells
-and exposes four learner controls: force recipe, material, salt, and thermal
-motion. Drag protocell B (or focus it and use the arrow keys) to change the
-surface gap, then use Play/Pause and Reset to explore the motion.
+[Open the interactive physics page](interactive/index.html) directly in a
+modern browser — no installation or server is needed. It shows one pair of
+protocells and exposes four learner controls: force recipe, material, salt,
+and thermal motion. Drag protocell B (or focus it and use the arrow keys) to
+change the surface gap, then use Play/Pause and Reset to explore the motion.
 
 The page is an educational, single-pair illustration of the force laws in
 `src/`; it does not reproduce the exported 2D many-particle ensemble. Its
 technical section records the model limits, including the simplified CL
 retardation and the missing core repulsion in the vdW/CL recipes.
+
+Folder details and the Node test command are in
+[`interactive/README.md`](interactive/README.md). A German presentation script
+is available at [`interactive/speech_script.md`](interactive/speech_script.md).
 
 ## Notebooks ausführen
 
@@ -60,6 +64,7 @@ team1_forces/
 │   └── plots.py           # gemeinsamer Plot-Stil
 ├── notebooks/         # 01 Kraftkurven · 02 Paardynamik · 03 Cluster+Export · 04 Sweeps
 ├── tests/             # pytest-Suite (Physik-Konsistenz, Zonen, Metriken, Export)
+├── interactive/       # eigenständige Lernseite, Node-Tests, deutsches Sprechskript
 ├── data/processed/    # positions.csv, pairs.csv, cluster_metrics.csv, parameters.csv
 ├── figures/           # alle Pflichtplots (§14)
 └── report/            # Berichtsentwurf (Deutsch)

@@ -3,7 +3,7 @@ import { readFileSync } from "node:fs";
 import test from "node:test";
 import vm from "node:vm";
 
-const htmlPath = new URL("../interactive.html", import.meta.url);
+const htmlPath = new URL("./index.html", import.meta.url);
 
 function readPage() {
   return readFileSync(htmlPath, "utf8");
@@ -44,7 +44,7 @@ function loadPhysics() {
   const scripts = [...html.matchAll(/<script\b[^>]*>([\s\S]*?)<\/script>/gi)];
   assert.equal(scripts.length, 1, "expected exactly one inline script");
   const context = vm.createContext({ console });
-  vm.runInContext(scripts[0][1], context, { filename: "interactive.html" });
+  vm.runInContext(scripts[0][1], context, { filename: "index.html" });
   assert.ok(context.Team1Physics, "inline script must expose globalThis.Team1Physics");
   return context.Team1Physics;
 }

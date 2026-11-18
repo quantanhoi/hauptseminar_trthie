@@ -18,6 +18,16 @@ The page starts paused on DLVO (classic) / PMBC membrane / seed 0 / meso /
 frame 0. The separate N=50 exploration run is deliberately excluded from
 playback and from every aggregate.
 
+## Fixed experiment conditions
+
+A visible panel beside the run controls lists the conditions shared by all 18
+runs: 20 particles in a 20 µm periodic box with radius 500 nm, a preclustered
+start near 20 nm, 1,000 frames over 5 ms, 298.15 K, diffusion coefficient
+10⁻¹⁶ m²/s, 100 mM salt (Debye length 0.96 nm), material-specific Hamaker
+constants, Δt = 10⁻⁷ s with every 50th step recorded, and a ±20 pN force cap.
+Salt screening applies only to `dlvo_classic`; `vdw_only` and `cl_retarded`
+have no electrostatic or core term.
+
 ## What you can do
 
 - Choose any of the 18 comparison runs: model (`dlvo_classic`, `vdw_only`,

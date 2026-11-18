@@ -37,6 +37,13 @@ fieldset{border:1px solid var(--line);border-radius:8px;padding:10px 12px;margin
 .scene-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
 .scene-view{display:grid;gap:6px;align-content:start}.scene-view h3{font-size:.9rem}
 .playback-controls{padding:12px;background:var(--accent-bg);border-radius:10px}
+.conditions{display:grid;gap:10px;padding:12px;border:1px solid var(--line);border-radius:10px;background:#f8fafc}
+.conditions h3{font-size:.95rem}
+.condition-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin:0}
+.condition-grid div{min-width:0;padding:8px;border:1px solid var(--line);border-radius:8px;background:#fff}
+.condition-grid dt{color:var(--muted);font-size:.76rem;font-weight:600}
+.condition-grid dd{margin:2px 0 0;font-weight:600;overflow-wrap:anywhere}
+.condition-note{color:var(--muted);font-size:.82rem}
 .playback-controls>div:last-child{flex:1 1 280px}
 .readouts{display:grid;grid-template-columns:repeat(auto-fit,minmax(145px,1fr));gap:8px;margin:0}
 .readouts div{border:1px solid var(--line);border-radius:8px;padding:10px;min-width:0}
@@ -65,9 +72,9 @@ summary{display:flex;align-items:center;min-height:44px;font-weight:600;cursor:p
 .candidate-card{border:1px solid var(--line);border-radius:10px;padding:14px;display:grid;gap:10px;align-content:start}
 .candidate-card dl{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin:0}.candidate-card dt{font-size:.78rem;color:var(--muted)}.candidate-card dd{margin:0;font-weight:600}
 [hidden]{display:none}
-@media (max-width:760px){.pipeline{grid-template-columns:repeat(2,minmax(0,1fr))}.grid,.scene-grid,.candidate-cards{grid-template-columns:1fr}#state-evidence .readouts{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:760px){.pipeline{grid-template-columns:repeat(2,minmax(0,1fr))}.grid,.scene-grid,.candidate-cards{grid-template-columns:1fr}.condition-grid{grid-template-columns:repeat(2,minmax(0,1fr))}#state-evidence .readouts{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media (max-width:640px){main{padding:12px 10px 36px}header,section,details{padding:14px}.state-choice{grid-template-columns:minmax(0,1fr) auto}.frequency-track{grid-column:1/-1;grid-row:2}}
-@media (max-width:400px){.pipeline{grid-template-columns:1fr}.readouts{grid-template-columns:repeat(2,minmax(0,1fr))}#state-evidence .readouts{grid-template-columns:1fr}}
+@media (max-width:400px){.pipeline{grid-template-columns:1fr}.readouts{grid-template-columns:repeat(2,minmax(0,1fr))}.condition-grid{grid-template-columns:1fr}#state-evidence .readouts{grid-template-columns:1fr}}
 @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
 </style>
 </head>
@@ -122,6 +129,24 @@ summary{display:flex;align-items:center;min-height:44px;font-weight:600;cursor:p
 <label><input type="radio" name="graph-type" value="near"> <strong>near</strong> — 10 nm (includes hard contacts)</label>
 <label><input type="radio" name="graph-type" value="meso" checked> <strong>meso</strong> — 30 nm (includes hard + near)</label>
 </fieldset>
+</div>
+<div id="run-conditions" class="conditions" aria-labelledby="run-conditions-title">
+<h3 id="run-conditions-title">Fixed experiment conditions for all 18 runs</h3>
+<dl class="condition-grid">
+<div><dt>Particles</dt><dd>20 particles</dd></div>
+<div><dt>Recorded window</dt><dd>1,000 frames over 5 ms</dd></div>
+<div><dt>Simulation box</dt><dd>20 µm periodic box</dd></div>
+<div><dt>Particle radius</dt><dd>500 nm</dd></div>
+<div><dt>Initial configuration</dt><dd>20 nm preclustered lattice with small deterministic jitter</dd></div>
+<div><dt>Temperature</dt><dd>298.15 K</dd></div>
+<div><dt>Diffusion coefficient</dt><dd>10⁻¹⁶ m²/s</dd></div>
+<div><dt>Salt concentration</dt><dd>100 mM; Debye length 0.96 nm (DLVO only)</dd></div>
+<div><dt>Hamaker constant</dt><dd>PMBC 5 × 10⁻²¹ J; fatty acid 0.5 × 10⁻²¹ J</dd></div>
+<div><dt>Dynamics</dt><dd>Δt = 10⁻⁷ s; recorded every 50 steps</dd></div>
+<div><dt>Force cap</dt><dd>±20 pN</dd></div>
+<div><dt>DLVO parameters</dt><dd>B = 20 kBT; core range 0.5 nm, strength 0.5 kBT</dd></div>
+</dl>
+<p class="condition-note"><strong>Model scope:</strong> salt screening belongs to DLVO only; <code>vdw_only</code> and <code>cl_retarded</code> have no electrostatic term and no core term. CL retardation uses L<sub>ret</sub> = 20 nm and p = 2.</p>
 </div>
 <div class="controls playback-controls" aria-label="Frame playback controls">
 <button id="play" type="button" aria-pressed="false">Play</button>

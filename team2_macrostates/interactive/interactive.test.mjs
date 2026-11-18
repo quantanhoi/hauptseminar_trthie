@@ -185,7 +185,7 @@ const PAGE_IDS = [
   "filtered-macrostate-readout", "macrostate-explanation", "overlap-warning", "raw-timeline",
   "filtered-timeline", "changed-count", "dwell-readout", "state-evidence", "candidate-cards",
   "node-roster", "frame-readout", "scene-desc", "evidence-title", "state-buttons",
-  "raw-runs", "filtered-runs", "example-filter", "example-stable",
+  "raw-runs", "filtered-runs", "example-filter", "example-stable", "run-conditions",
 ];
 const svgBlocks = () => [...html.matchAll(/<svg\b[\s\S]*?<\/svg>/g)].map((m) => m[0]);
 
@@ -247,6 +247,21 @@ test("the page starts paused on DLVO / PMBC / seed 0 at frame 0", () => {
   assert.ok(!/autoplay/.test(text), "no autoplay");
   assert.ok(/<noscript>/.test(html));
   assert.ok(/id="data-error"[^>]*role="alert"/.test(html));
+});
+
+test("fixed experiment conditions are visible beside the run controls", () => {
+  const start = html.indexOf('id="run-conditions"');
+  assert.ok(start > 0, "missing run-conditions panel");
+  assert.ok(start < html.indexOf("<details"), "run conditions must stay visible");
+  const block = html.slice(start, html.indexOf("</section>", start));
+  for (const value of ["20 particles", "1,000 frames", "5 ms", "20 µm periodic box",
+    "500 nm", "20 nm preclustered", "298.15 K", "10⁻¹⁶ m²/s", "100 mM",
+    "0.96 nm", "5 × 10⁻²¹ J", "0.5 × 10⁻²¹ J", "Δt = 10⁻⁷ s",
+    "every 50 steps", "±20 pN"]) {
+    assert.ok(block.includes(value), `run conditions missing ${value}`);
+  }
+  assert.ok(block.includes("DLVO only"), "salt applicability must be explicit");
+  assert.ok(block.includes("no core term"), "vdW/CL core limitation must be explicit");
 });
 
 test("required caveats are never hidden inside details elements", () => {
