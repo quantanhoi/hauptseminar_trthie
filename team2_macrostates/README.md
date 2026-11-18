@@ -77,8 +77,19 @@ team2_macrostates/
 ├── data/processed/          # erzeugte Team-2-/Team-3-CSVs
 ├── figures/                 # Pflichtvisualisierungen
 ├── tests/                   # pytest-Suite
+├── interactive/             # eigenständige HTML-Seite, Exporter, Node-Tests
 └── report/report.md
 ```
+
+## Interaktive Seite
+
+[interactive/index.html](interactive/index.html) ist eine eigenständige englische HTML-Seite, die die
+echten Exporte erklärt: 18 N=20-Läufe mit allen 1.000 Frames je Lauf,
+hard/near/meso-Graphen, Roh- und Filtersequenzen, Dwell/Zensierung sowie die
+gepoolte Evidenz und die vier heuristischen Kandidaten. Sie startet pausiert
+und braucht keinen Server; Python ist nur zum Neuerzeugen der eingebetteten
+Daten nötig. Details, Grenzen und Testbefehle stehen in
+[interactive/README.md](interactive/README.md).
 
 ## Analysekern
 
